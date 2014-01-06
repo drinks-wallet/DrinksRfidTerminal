@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <LiquidCrystal.h>
 
+#include "Buttons.h"
 #include "Catalog.h"
 #include "Display.h"
 #include "WebClient.h"
@@ -9,6 +10,7 @@
 WebClient webClient;
 Catalog catalog;
 Display display;
+Buttons buttons;
 
 void setup() 
 {  
@@ -16,11 +18,11 @@ void setup()
   
   display.begin();
   webClient.begin();
-}
-
-void loop() 
-{
-  display.setHeader("CHOOSE PRODUCT:");
+  buttons.begin();
+  
+  
+  
+    display.setHeader("CHOOSE PRODUCT:");
   
   Serial.print("CLOCK = ");
   Serial.println(webClient.getClock());
@@ -28,9 +30,7 @@ void loop()
   Serial.println("CATALOG =");
   
   webClient.getCatalog(catalog);
-  
-  display.setSelection(catalog.getName(0));
-  
+    
   for( int i=0 ; i<catalog.getCount() ; i++ )
   {
    Serial.print("PRICE=");
@@ -39,8 +39,17 @@ void loop()
    Serial.print("NAME=");
    Serial.println(catalog.getName(i));    
   }
+  
+    buttons.setCount(catalog.getCount());
+}
+
+
+
+void loop() 
+{  
+  display.setSelection(catalog.getName(buttons.getSelectedIndex())); 
     
-  delay(5000);
+  delay(100);
 }
 
 
