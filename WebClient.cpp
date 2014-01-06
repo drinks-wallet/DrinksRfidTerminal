@@ -66,6 +66,11 @@ void WebClient::println(char* s)
 
 void WebClient::readln(char* buffer, int size)
 {
+  readblock(buffer, size, '\n');
+}
+
+bool WebClient::readblock(char* buffer, int size, char terminator)
+{
   for( int i=0; i<size ; i++ )
   {
     while (!client.available())
@@ -73,17 +78,17 @@ void WebClient::readln(char* buffer, int size)
       if(!client.connected())
       {
         buffer[i] = 0;
-        return;
+        return false;
       } 
     }
 
     buffer[i] = client.read();
     //Serial.print(buffer[i]);
 
-    if( buffer[i] == '\n' )
+    if( buffer[i] == terminator )
     {
-        buffer[i] = 0;
-        return;
+      buffer[i] = 0;
+      return true;
     } 
   }
 }
@@ -99,16 +104,24 @@ void WebClient::skipHeaders()
   while( line[0] != '\r' && line[0] != '\n'); 
 }
 
+void WebClient::performGetRequest(char* path)
+{
+  client.print("GET ");
+  client.print(path);
+  client.println(" HTTP/1.1");
+  client.println("Host: 10.1.130.11:8080");
+  client.println("Connection: close");
+  client.println();
+
+  skipHeaders(); 
+}
+
+
 unsigned long WebClient::getClock()
 {
   if (!connect()) return 0;
 
-  println("GET /drinks/api/terminal/clock HTTP/1.1");
-  println("Host: 10.1.130.11:8080");
-  println("Connection: close");
-  println();
-
-  skipHeaders();
+  performGetRequest("/drinks/api/terminal/clock");
 
   char line[16];
   readln(line, sizeof(line));
@@ -119,4 +132,29 @@ unsigned long WebClient::getClock()
 
   return clock;
 }
+
+void WebClient::getCatalog(Catalog& catalog)
+{
+  if (!connect()) return;
+
+  performGetRequest("/drinks/api/terminal/catalog");
+
+  char buffer[16];
+
+  for( int i=0 ; i<CATALOG_MAX_COUNT ; i++)
+  {
+    catalog.setCount(i);
+
+    readblock(buffer, sizeof(buffer), ';');
+    catalog.setPrice(i, buffer);
+
+    bool more = readblock(buffer, sizeof(buffer), ';');
+    catalog.setName(i, buffer);
+
+    if( !more ) break;
+  }
+
+  disconnect();
+}
+
 
