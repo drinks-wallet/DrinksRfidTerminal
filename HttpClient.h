@@ -14,6 +14,9 @@ class HttpClient
     void skipHeaders();
     void performGetRequest(char*);    
     void performPostRequest(char* path, char* content);
+    
+  private:
+    void sendCommonHeader(char*,char*);
 };
 
 #endif

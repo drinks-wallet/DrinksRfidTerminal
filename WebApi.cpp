@@ -14,7 +14,7 @@ unsigned long WebApi::getTime()
 {
   if (!http.connect()) return 0;
 
-  http.performGetRequest("/drinks/api/terminal/time");
+  http.performGetRequest("/drinks/api/time");
 
   char line[16];
   http.readln(line, sizeof(line));
@@ -30,7 +30,7 @@ void WebApi::getCatalog(Catalog& catalog)
 {
   if (!http.connect()) return;
 
-  http.performGetRequest("/drinks/api/terminal/catalog");
+  http.performGetRequest("/drinks/api/catalog");
 
   char buffer[32];
   int i;
@@ -51,16 +51,18 @@ void WebApi::getCatalog(Catalog& catalog)
 
 bool WebApi::buy(unsigned long time, char* badge, int product)
 {
-  char buffer[64];
-  sprintf(buffer, "time=%lu&badge=%s&product=%d", time, badge, product);
+  if (!http.connect()) return false;
   
-  Serial.println(buffer);
- 
-  http.performPostRequest("/drinks/api/terminal/buy", buffer);
+  char buffer[64];
+  sprintf(buffer, "time=%lu&badge=%s&product=%d&hash=asshole", time, badge, product);
+  
+  http.performPostRequest("/drinks/api/buy", buffer);
   
   http.readln(buffer, 64);
   
-  Serial.println(buffer);
+  http.disconnect();
+  
+  return true;
 }
 
 

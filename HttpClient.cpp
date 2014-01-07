@@ -107,14 +107,21 @@ void HttpClient::skipHeaders()
   while( line[0] != '\r' && line[0] != '\n'); 
 }
 
-void HttpClient::performGetRequest(char* path)
+void HttpClient::sendCommonHeader(char* verb, char* path)
 {
-  client.print("GET ");
+  client.print(verb);
+  client.print(" ");
   client.print(path);
   client.println(" HTTP/1.1");
-  client.println("Host: 10.1.130.11:8080");
-  client.println("Accept: text/plain");
+  client.print("Host: 10.1.130.11:");
+  client.println(SERVER_PORT);
+  client.println("Accept: text/plain");  
   client.println("Connection: close");
+}
+
+void HttpClient::performGetRequest(char* path)
+{  
+  sendCommonHeader("GET", path);
   client.println();
 
   skipHeaders(); 
@@ -122,17 +129,12 @@ void HttpClient::performGetRequest(char* path)
 
 void HttpClient::performPostRequest(char* path, char* content)
 {
-  client.print("POST ");
-  client.print(path);
-  client.println(" HTTP/1.1");
-  client.println("Host: 10.1.130.11:8080");
-  client.println("Accept: text/plain");
+  sendCommonHeader("POST", path);
   client.println("Content-Type: application/x-www-form-urlencoded");
-  client.println("Connection: close");
-  client.println("Content-Length: ");
+  client.print("Content-Length: ");
   client.println(strlen(content));
   client.println();
-  client.println(content);  
+  client.println(content);
 
   skipHeaders(); 
 }
