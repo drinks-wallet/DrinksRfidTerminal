@@ -5,12 +5,14 @@
 
 #include "Buttons.h"
 #include "Catalog.h"
+#include "Clock.h"
 #include "Display.h"
 #include "RfidReader.h"
 #include "WebClient.h"
 
 static Buttons buttons;
 static Catalog catalog;
+static Clock clock;
 static Display display;
 static RfidReader rfid;
 static WebClient webClient;
@@ -27,9 +29,12 @@ void setup()
   rfid.begin();
 
   display.setHeader("Connecting...");    
-
-  Serial.print("CLOCK = ");
-  Serial.println(webClient.getClock());
+  
+  unsigned long time = webClient.getTime();
+  clock.setTime(time); 
+  
+  Serial.print("TIME = ");
+  Serial.println(time);  
 
   Serial.println("CATALOG:");
 
@@ -37,6 +42,9 @@ void setup()
 
   for( int i=0 ; i<catalog.getProductCount() ; i++ )
   {
+    Serial.print("[");
+    Serial.print(i);
+    Serial.print("]");
     Serial.println(catalog.getProduct(i));    
   }
 

@@ -120,11 +120,11 @@ void WebClient::performGetRequest(char* path)
 }
 
 
-unsigned long WebClient::getClock()
+unsigned long WebClient::getTime()
 {
   if (!connect()) return 0;
 
-  performGetRequest("/drinks/api/terminal/clock");
+  performGetRequest("/drinks/api/terminal/time");
 
   char line[16];
   readln(line, sizeof(line));

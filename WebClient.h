@@ -7,7 +7,7 @@ class WebClient
 {
   public:
     void begin();
-    unsigned long getClock();    
+    unsigned long getTime();    
     void getCatalog(Catalog& catalog);
     
   private:
