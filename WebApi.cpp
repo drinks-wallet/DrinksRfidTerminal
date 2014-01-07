@@ -1,16 +1,16 @@
 #include <Arduino.h>
 
 #include "HttpClient.h"
-#include "WebClient.h"
+#include "WebApi.h"
 
 static HttpClient http;
 
-void WebClient::begin()
+void WebApi::begin()
 {
   http.begin();
 }
 
-unsigned long WebClient::getTime()
+unsigned long WebApi::getTime()
 {
   if (!http.connect()) return 0;
 
@@ -26,7 +26,7 @@ unsigned long WebClient::getTime()
   return clock;
 }
 
-void WebClient::getCatalog(Catalog& catalog)
+void WebApi::getCatalog(Catalog& catalog)
 {
   if (!http.connect()) return;
 

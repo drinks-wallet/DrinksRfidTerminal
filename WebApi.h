@@ -1,9 +1,9 @@
-#ifndef _WEBCLIENT_H
-#define _WEBCLIENT_H
+#ifndef _WEBAPI_H
+#define _WEBAPI_H
 
 #include "Catalog.h"
 
-class WebClient
+class WebApi
 {
   public:
     void begin();

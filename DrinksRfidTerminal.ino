@@ -8,14 +8,14 @@
 #include "Clock.h"
 #include "Display.h"
 #include "RfidReader.h"
-#include "WebClient.h"
+#include "WebApi.h"
 
 static Buttons buttons;
 static Catalog catalog;
 static Clock clock;
 static Display display;
 static RfidReader rfid;
-static WebClient webClient;
+static WebApi api;
 
 void setup() 
 {  
@@ -24,13 +24,13 @@ void setup()
   display.begin();
   display.setHeader("Initialize...");    
 
-  webClient.begin();
+  api.begin();
   buttons.begin();
   rfid.begin();
 
   display.setHeader("Connecting...");    
   
-  unsigned long time = webClient.getTime();
+  unsigned long time = api.getTime();
   clock.setTime(time); 
   
   Serial.print("TIME = ");
@@ -38,7 +38,7 @@ void setup()
 
   Serial.println("CATALOG:");
 
-  webClient.getCatalog(catalog);
+  api.getCatalog(catalog);
 
   for( int i=0 ; i<catalog.getProductCount() ; i++ )
   {
