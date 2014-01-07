@@ -1,6 +1,7 @@
 #include <Ethernet.h>
 #include <SPI.h>
 #include <LiquidCrystal.h>
+#include <SipHash_2_4.h>
 #include <SoftwareSerial.h>
 
 #include "Buttons.h"
