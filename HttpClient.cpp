@@ -120,5 +120,21 @@ void HttpClient::performGetRequest(char* path)
   skipHeaders(); 
 }
 
+void HttpClient::performPostRequest(char* path, char* content)
+{
+  client.print("POST ");
+  client.print(path);
+  client.println(" HTTP/1.1");
+  client.println("Host: 10.1.130.11:8080");
+  client.println("Accept: text/plain");
+  client.println("Content-Type: application/x-www-form-urlencoded");
+  client.println("Connection: close");
+  client.println("Content-Length: ");
+  client.println(strlen(content));
+  client.println();
+  client.println(content);  
+
+  skipHeaders(); 
+}
 
 

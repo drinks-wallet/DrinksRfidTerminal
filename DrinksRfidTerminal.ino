@@ -57,13 +57,16 @@ void setup()
 
 void loop() 
 {  
-  display.setSelection(catalog.getProduct(buttons.getSelectedIndex())); 
+  int product = buttons.getSelectedIndex();
+  
+  display.setSelection(catalog.getProduct(product)); 
 
   char* badge = rfid.tryRead();
 
   if( badge )
   {
-    Serial.println(badge); 
+    Serial.println(badge);     
+    api.buy(clock.getTime(), badge, product);
   }
 
   delay(100);

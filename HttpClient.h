@@ -13,6 +13,7 @@ class HttpClient
     bool readblock(char*,int,char);
     void skipHeaders();
     void performGetRequest(char*);    
+    void performPostRequest(char* path, char* content);
 };
 
 #endif

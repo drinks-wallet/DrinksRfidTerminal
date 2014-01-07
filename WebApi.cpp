@@ -49,6 +49,20 @@ void WebApi::getCatalog(Catalog& catalog)
   http.disconnect();
 }
 
+bool WebApi::buy(unsigned long time, char* badge, int product)
+{
+  char buffer[64];
+  sprintf(buffer, "time=%lu&badge=%s&product=%d", time, badge, product);
+  
+  Serial.println(buffer);
+ 
+  http.performPostRequest("/drinks/api/terminal/buy", buffer);
+  
+  http.readln(buffer, 64);
+  
+  Serial.println(buffer);
+}
+
 
 
 
