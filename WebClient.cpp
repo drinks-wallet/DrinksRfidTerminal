@@ -151,7 +151,7 @@ void WebClient::getCatalog(Catalog& catalog)
   
   for( i=0 ; i<CATALOG_MAX_COUNT && more; i++)
   {    
-    boolean more = readblock(buffer, sizeof(buffer), ';');
+    more = readblock(buffer, sizeof(buffer), ';');
     catalog.setProduct(i, buffer);
   }
   catalog.setProductCount(i);  
