@@ -1,9 +1,9 @@
 #ifndef _CATALOG_H
 #define _CATALOG_H
 
-#define CATALOG_MAX_COUNT      10
-#define PRODUCT_PRICE_MAX_SIZE 8
-#define PRODUCT_NAME_MAX_SIZE 16
+#define CATALOG_MAX_COUNT        10
+#define PRODUCT_NAME_MAX_SIZE    24
+#define CATALOG_HEADER_MAX_SIZE  24
 
 class Catalog
 {
@@ -11,20 +11,20 @@ class Catalog
   
     Catalog();
    
-    void setCount(int);
-    int getCount();
+    void setProductCount(int);
+    int getProductCount();
     
-    char* getName(int);
-    void setName(int,char*);
+    char* getProduct(int);
+    void setProduct(int,char*);
     
-    char* getPrice(int);
-    void setPrice(int,char*);
-
+    char* getHeader();
+    void setHeader(char*);
+    
   private:
 
     int count;
-    char prices[10][PRODUCT_PRICE_MAX_SIZE];
-    char names[10][PRODUCT_NAME_MAX_SIZE];
+    char products[10][PRODUCT_NAME_MAX_SIZE];
+    char header[CATALOG_HEADER_MAX_SIZE];
 };
 
 #endif

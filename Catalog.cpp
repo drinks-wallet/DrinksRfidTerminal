@@ -6,34 +6,34 @@ Catalog::Catalog()
  count = 0; 
 }
 
-void Catalog::setCount(int n)
+void Catalog::setProductCount(int n)
 {
   count = n;
 }
 
-int Catalog::getCount()
+int Catalog::getProductCount()
 {
  return count; 
 }
     
-char* Catalog::getName(int id)
+char* Catalog::getProduct(int id)
 {
- return names[id];
+ return products[id];
 }
 
-void Catalog::setName(int id,char* s)
+void Catalog::setProduct(int id,char* s)
 {
- strncpy(names[id], s, PRODUCT_NAME_MAX_SIZE); 
+ strncpy(products[id], s, PRODUCT_NAME_MAX_SIZE); 
 }
 
-char* Catalog::getPrice(int id)
+char* Catalog::getHeader()
 {
-   return prices[id];
+   return header;
 }
 
-void Catalog::setPrice(int id,char* s)
+void Catalog::setHeader(char* s)
 {
-   strncpy(prices[id], s, PRODUCT_PRICE_MAX_SIZE); 
+   strncpy(header, s, CATALOG_HEADER_MAX_SIZE); 
 }
 
 

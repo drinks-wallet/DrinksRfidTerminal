@@ -17,37 +17,35 @@ void setup()
   Serial.begin(9600);
   
   display.begin();
+  display.setHeader("Initialize...");    
+  
   webClient.begin();
   buttons.begin();
   
-  
-  
-    display.setHeader("CHOOSE PRODUCT:");
+  display.setHeader("Connecting...");    
   
   Serial.print("CLOCK = ");
   Serial.println(webClient.getClock());
   
-  Serial.println("CATALOG =");
+  Serial.println("CATALOG:");
   
   webClient.getCatalog(catalog);
     
-  for( int i=0 ; i<catalog.getCount() ; i++ )
+  for( int i=0 ; i<catalog.getProductCount() ; i++ )
   {
-   Serial.print("PRICE=");
-   Serial.println(catalog.getPrice(i));
-   
-   Serial.print("NAME=");
-   Serial.println(catalog.getName(i));    
+   Serial.println(catalog.getProduct(i));    
   }
   
-    buttons.setCount(catalog.getCount());
+    buttons.setCount(catalog.getProductCount());
+    
+    display.setHeader(catalog.getHeader());
 }
 
 
 
 void loop() 
 {  
-  display.setSelection(catalog.getName(buttons.getSelectedIndex())); 
+  display.setSelection(catalog.getProduct(buttons.getSelectedIndex())); 
     
   delay(100);
 }

@@ -16,6 +16,8 @@ static byte mac[] = {
 
 void WebClient::begin()
 {
+  delay (100);
+
   // start the Ethernet connection:
   if (Ethernet.begin(mac) == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
@@ -110,6 +112,7 @@ void WebClient::performGetRequest(char* path)
   client.print(path);
   client.println(" HTTP/1.1");
   client.println("Host: 10.1.130.11:8080");
+  client.println("Accept: text/plain");
   client.println("Connection: close");
   client.println();
 
@@ -139,22 +142,23 @@ void WebClient::getCatalog(Catalog& catalog)
 
   performGetRequest("/drinks/api/terminal/catalog");
 
-  char buffer[16];
+  char buffer[32];
+  int i;
+  boolean more;
 
-  for( int i=0 ; i<CATALOG_MAX_COUNT ; i++)
-  {
-    catalog.setCount(i);
-
-    readblock(buffer, sizeof(buffer), ';');
-    catalog.setPrice(i, buffer);
-
-    bool more = readblock(buffer, sizeof(buffer), ';');
-    catalog.setName(i, buffer);
-
-    if( !more ) break;
+  more = readblock(buffer, sizeof(buffer), ';');
+  catalog.setHeader(buffer);
+  
+  for( i=0 ; i<CATALOG_MAX_COUNT && more; i++)
+  {    
+    boolean more = readblock(buffer, sizeof(buffer), ';');
+    catalog.setProduct(i, buffer);
   }
+  catalog.setProductCount(i);  
 
   disconnect();
 }
+
+
 
 
