@@ -12,8 +12,8 @@
 #include "RfidReader.h"
 #include "WebApi.h"
 
-#define CLOCK_SYNC_PERIOD  1*60*1000
-#define CATALOG_SYNC_PERIOD  1*60*1000
+#define CLOCK_SYNC_PERIOD  (1*60*1000UL)
+#define CATALOG_SYNC_PERIOD  (1*60*1000UL)
 
 static Buttons buttons;
 static Catalog catalog;
@@ -26,30 +26,12 @@ static WebApi api;
 static unsigned long clockSyncTime = 0;
 static unsigned long catalogSyncTime = 0;
 
-void setup() 
-{  
-  display.begin();  
-  console.begin();
-
-  console.enter(display);
-
-  display.setText(0, "Initializing...");    
-  display.setText(1, "");    
-
-  api.begin();
-  buttons.begin();
-  rfid.begin();
-
-  display.setText(0, "Connecting...");    
-}
-
-static void syncClockIfNeeded()
+static void syncClock()
 {
-  if( clockSyncTime != 0 && clockSyncTime + CLOCK_SYNC_PERIOD < millis() ) 
-    return;
+  display.setText(1, "please wait");
     
   Serial.print("TIME = ");  
-    
+      
   unsigned long time = api.getTime();
   
   if( time != 0 )
@@ -65,12 +47,9 @@ static void syncClockIfNeeded()
   Serial.println(time); 
 }
 
-static void syncCatalogIfNeeded()
+static void syncCatalog()
 { 
-  if( catalogSyncTime != 0 && catalogSyncTime + CATALOG_SYNC_PERIOD < millis() ) 
-    return;
-    
-   Serial.println("CATALOG:");
+  Serial.println("CATALOG:");
 
   api.getCatalog(catalog);
 
@@ -92,6 +71,44 @@ static void syncCatalogIfNeeded()
   }
 }
 
+static void syncClockIfNeeded()
+{
+  if( clockSyncTime + CLOCK_SYNC_PERIOD < millis() ) 
+  {
+   display.setText(1, "please wait");
+   syncClock();
+  }
+}
+
+static void syncCatalogIfNeeded()
+{ 
+  if( catalogSyncTime + CATALOG_SYNC_PERIOD < millis() ) 
+  {    
+    display.setText(1, "please wait");
+    syncCatalog();
+  }
+}
+
+void setup() 
+{  
+  display.begin();  
+  console.begin();
+
+  console.enter(display);
+
+  display.setText(0, "Initializing...");    
+  display.setText(1, "");    
+
+  api.begin();
+  buttons.begin();
+  rfid.begin();
+
+  display.setText(0, "Connecting...");    
+  
+  syncClock();
+  syncCatalog();
+}
+
 void loop() 
 {  
   syncClockIfNeeded();
@@ -101,6 +118,8 @@ void loop()
   {
    display.setText(0, "* * * ERROR * * *"); 
    display.setText(1, "Connection failed");
+   delay(5000);
+   return;
   }
   
   buttons.setCount(catalog.getProductCount());
@@ -120,7 +139,3 @@ void loop()
 
   delay(100);
 }
-
-
-
-
