@@ -20,16 +20,23 @@ static WebApi api;
 
 void setup() 
 {  
+  display.begin();
+  display.setText(0, "Serial console 9600");
+  display.setText(1, "Press any key");
+  
   Serial.begin(9600);
+  
+  while( millis() < 2000 );  
 
   display.begin();
-  display.setHeader("Initialize...");    
+  display.setText(0, "Initialize...");   
+  display.setText(1, "");
 
   api.begin();
   buttons.begin();
   rfid.begin();
 
-  display.setHeader("Connecting...");    
+  display.setText(0, "Connecting...");    
   
   unsigned long time = api.getTime();
   clock.setTime(time); 
@@ -51,7 +58,7 @@ void setup()
 
   buttons.setCount(catalog.getProductCount());
 
-  display.setHeader(catalog.getHeader());
+  display.setText(0, catalog.getHeader());
 }
 
 
@@ -60,7 +67,7 @@ void loop()
 {  
   int product = buttons.getSelectedIndex();
   
-  display.setSelection(catalog.getProduct(product)); 
+  display.setSelection(1, catalog.getProduct(product)); 
 
   char* badge = rfid.tryRead();
 

@@ -15,19 +15,24 @@ void Display::begin()
   delay(100);
 }
 
-void Display::setHeader(char* s)
+void Display::setText(int line, char* s)
 {
-  lcd.setCursor(0, 0);
-  lcd.print(s);
+  lcd.setCursor(0, line);  
+
+  int i;
+  for( i=0 ; s[i] && i<SCREEN_COLUMNS ; i++)
+    lcd.print(s[i]);
+  for( ; i<SCREEN_COLUMNS ; i++)
+    lcd.print(' ');
 }
 
-void Display::setSelection(char* s)
+void Display::setSelection(int line, char* s)
 {  
   int length = strnlen(s, SELECTION_MAX_LENGTH);
   int leftPadding = (SELECTION_MAX_LENGTH - length) / 2;
   int rightPadding = SELECTION_MAX_LENGTH - length - leftPadding;
   
-  lcd.setCursor(0, 1);
+  lcd.setCursor(0, line);
   
   lcd.print('<');
   

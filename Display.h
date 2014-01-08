@@ -6,8 +6,8 @@ class Display
   public:
   
     void begin();
-    void setHeader(char*);
-    void setSelection(char*);
+    void setText(int,char*);
+    void setSelection(int,char*);
 };
 
 #endif
