@@ -7,6 +7,7 @@
 #include "Buttons.h"
 #include "Catalog.h"
 #include "Clock.h"
+#include "Console.h"
 #include "Display.h"
 #include "RfidReader.h"
 #include "WebApi.h"
@@ -14,23 +15,20 @@
 static Buttons buttons;
 static Catalog catalog;
 static Clock clock;
+static Console console;
 static Display display;
 static RfidReader rfid;
 static WebApi api;
 
 void setup() 
 {  
-  display.begin();
-  display.setText(0, "Serial console 9600");
-  display.setText(1, "Press any key");
+  display.begin();  
+  console.begin();
   
-  Serial.begin(9600);
+  console.enter(display);
   
-  while( millis() < 2000 );  
-
-  display.begin();
-  display.setText(0, "Initialize...");   
-  display.setText(1, "");
+  display.setText(0, "Initializing...");    
+  display.setText(1, "");    
 
   api.begin();
   buttons.begin();
