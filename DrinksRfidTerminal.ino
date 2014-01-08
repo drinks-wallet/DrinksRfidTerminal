@@ -12,6 +12,8 @@
 #include "RfidReader.h"
 #include "WebApi.h"
 
+#define CLOCK_SYNC_PERIOD  1*60*1000
+
 static Buttons buttons;
 static Catalog catalog;
 static Clock clock;
@@ -20,13 +22,15 @@ static Display display;
 static RfidReader rfid;
 static WebApi api;
 
+static unsigned long clockSyncTime = 0;
+
 void setup() 
 {  
   display.begin();  
   console.begin();
-  
+
   console.enter(display);
-  
+
   display.setText(0, "Initializing...");    
   display.setText(1, "");    
 
@@ -35,12 +39,6 @@ void setup()
   rfid.begin();
 
   display.setText(0, "Connecting...");    
-  
-  unsigned long time = api.getTime();
-  clock.setTime(time); 
-  
-  Serial.print("TIME = ");
-  Serial.println(time);  
 
   Serial.println("CATALOG:");
 
@@ -59,12 +57,41 @@ void setup()
   display.setText(0, catalog.getHeader());
 }
 
+static void syncClockIfNeeded()
+{
+  if( clockSyncTime != 0 && clockSyncTime + CLOCK_SYNC_PERIOD < millis() ) 
+    return;
+  
+  unsigned long time = api.getTime();
+  
+  if( time != 0 )
+  {      
+    clockSyncTime = millis(); 
+    clock.setTime(time);
+  }
+  else
+  {
+    clockSyncTime = 0;
+  }
+  
+   Serial.print("TIME = ");
+  Serial.println(time); 
+}
+
 
 
 void loop() 
 {  
-  int product = buttons.getSelectedIndex();
+  syncClockIfNeeded();
   
+  if( clockSyncTime == 0 )
+  {
+   display.setText(0, "* * * ERROR * * *"); 
+   display.setText(1, "Connection failed");
+  }
+  
+  int product = buttons.getSelectedIndex();
+
   display.setSelection(1, catalog.getProduct(product)); 
 
   char* badge = rfid.tryRead();
@@ -77,6 +104,7 @@ void loop()
 
   delay(100);
 }
+
 
 
 
