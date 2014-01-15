@@ -12,7 +12,7 @@ class HttpClient
     void readln(char*,int);
     bool readblock(char*,int,char);
     void skipHeaders();
-    void performGetRequest(char*);    
+    boolean performGetRequest(char* path, char* content, int maxContentSize);
     void performPostRequest(char* path, char* content);
     
   private:

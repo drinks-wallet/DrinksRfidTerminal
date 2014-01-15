@@ -74,7 +74,9 @@ void HttpClient::readln(char* buffer, int size)
 
 bool HttpClient::readblock(char* buffer, int size, char terminator)
 {
-  for( int i=0; i<size ; i++ )
+  int i;
+  
+  for( i=0; i<size-1 ; i++ )
   {
     while (!client.available())
     {
@@ -89,11 +91,11 @@ bool HttpClient::readblock(char* buffer, int size, char terminator)
     //Serial.print(buffer[i]);
 
     if( buffer[i] == terminator )
-    {
-      buffer[i] = 0;
-      return true;
-    } 
+      break;
   }
+  
+  buffer[i] = 0;
+  return true;
 }
 
 
@@ -115,22 +117,27 @@ void HttpClient::sendCommonHeader(char* verb, char* path)
   client.println(" HTTP/1.1");
   client.print("Host: 10.1.130.11:");
   client.println(SERVER_PORT);
-  client.println("Accept: text/plain");  
+  client.println("Accept: application/json");  
   client.println("Connection: close");
 }
 
-void HttpClient::performGetRequest(char* path)
+boolean HttpClient::performGetRequest(char* path, char* content, int maxContentSize)
 {  
+   if (!connect()) return false;
+
   sendCommonHeader("GET", path);
   client.println();
 
-  skipHeaders(); 
+  skipHeaders();
+  readln(content, maxContentSize);
+  
+  disconnect();
 }
 
 void HttpClient::performPostRequest(char* path, char* content)
 {
   sendCommonHeader("POST", path);
-  client.println("Content-Type: application/x-www-form-urlencoded");
+  client.println("Content-Type: application/json");
   client.print("Content-Length: ");
   client.println(strlen(content));
   client.println();

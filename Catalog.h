@@ -1,9 +1,9 @@
 #ifndef _CATALOG_H
 #define _CATALOG_H
 
-#define CATALOG_MAX_COUNT        10
-#define PRODUCT_NAME_MAX_SIZE    24
-#define CATALOG_HEADER_MAX_SIZE  24
+#define CATALOG_MAX_COUNT        4
+#define PRODUCT_NAME_MAX_SIZE    19
+#define CATALOG_HEADER_MAX_SIZE  21
 
 class Catalog
 {

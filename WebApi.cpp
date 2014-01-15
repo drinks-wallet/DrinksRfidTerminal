@@ -1,10 +1,18 @@
 #include <Arduino.h>
+#include <JsonParser.h>
 #include <SipHash_2_4.h>
 
+#include "Clock.h"
 #include "HttpClient.h"
 #include "WebApi.h"
 
+#define SYNC_PERIOD    60000L
+//#define TESTING_WITHOUT_SERVER 1
+
 static HttpClient http;
+static Clock clock;
+
+static unsigned long lastSyncTime = 0;
 
 unsigned char key[16] = {
   0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -15,43 +23,99 @@ void WebApi::begin()
   http.begin();
 }
 
-unsigned long WebApi::getTime()
-{
-  if (!http.connect()) return 0;
-
-  http.performGetRequest("/drinks/api/time");
-
-  char line[16];
-  http.readln(line, sizeof(line));
-
-  unsigned long clock = strtoul(line, NULL, 10);
-
-  http.disconnect();
-
-  return clock;
+bool extractHead(JsonHashTable root, Catalog& catalog)
+{  
+  char* header = root.getString("Header");
+  
+  if (header == NULL)
+  {
+    Serial.println("Sync: 'Header' not found");
+    return false;
+  }
+  
+  catalog.setHeader(header);
+  
+  return true;
 }
 
-void WebApi::getCatalog(Catalog& catalog)
-{
-  if (!http.connect()) return;
+bool extractProducts(JsonHashTable root, Catalog& catalog)
+{  
+  JsonArray array = root.getArray("Products");
 
-  http.performGetRequest("/drinks/api/catalog");
-
-  char buffer[32];
-  int i;
-  boolean more;
-
-  more = http.readblock(buffer, sizeof(buffer), ';');
-  catalog.setHeader(buffer);
-  
-  for( i=0 ; i<CATALOG_MAX_COUNT && more; i++)
-  {    
-    more = http.readblock(buffer, sizeof(buffer), ';');
-    catalog.setProduct(i, buffer);
+  if (!array.success())
+  {
+    Serial.println("Sync: 'Products' not found");
+    return false;
   }
-  catalog.setProductCount(i);  
+  
+  Serial.println("products=");
 
-  http.disconnect();
+  int count = array.getLength();
+  catalog.setProductCount(count);
+  
+  for( int i=0 ; i<count ; i++ )
+  {
+    char* name = array.getString(i);
+    Serial.println(name);
+    catalog.setProduct(i, name);
+  }
+  
+  return true;
+}
+
+bool extractTime(JsonHashTable root)
+{
+  unsigned long time = root.getLong("Time");
+  
+  if (time == 0)
+  {
+   Serial.println("Sync: 'Time' not found");
+   return false;
+  }
+  
+  clock.setTime(time); 
+  
+  return true;
+}
+
+boolean WebApi::sync(Catalog& catalog)
+{ 
+  if( millis() < lastSyncTime + SYNC_PERIOD )
+    return true;  
+  
+  Serial.println("Sync...");
+  
+  char json[160];
+
+#if TESTING_WITHOUT_SERVER
+  strcpy(json, "{\"Header\":\"Selectionnez...\",\"Products\":[\"Can 1E\",\"Ice 0.5E\"],\"Time\":0}");
+#else
+  if( !http.performGetRequest("/drinks/api/sync", json, sizeof(json)) ) return false;
+#endif
+  
+  JsonParser<100> parser;
+  
+  Serial.println(json);
+  
+  JsonHashTable root = parser.parseHashTable(json);
+  
+  if (!root.success())
+  {
+   Serial.println("Sync: invalid JSON"); 
+   return false;
+  }     
+   
+  boolean success = 
+    extractHead(root,catalog) &&
+    extractProducts(root,catalog) &&
+    extractTime(root);
+
+  if( success ) 
+  {
+    lastSyncTime = millis();
+  }
+  
+  return success;
 }
 
 static void computeHash(char* source, char* destination)
@@ -68,13 +132,13 @@ static void computeHash(char* source, char* destination)
   destination[16] = 0;
 }
 
-bool WebApi::buy(unsigned long time, char* badge, int product)
+bool WebApi::buy(char* badge, int product)
 {
   if (!http.connect()) return false;
   
   int i, j;
   char buffer[128];
-  char* hash = buffer + sprintf(buffer, "badge=%s&product=%d&time=%lu&hash=", badge, product, time);
+  char* hash = buffer + sprintf(buffer, "badge=%s&product=%d&time=%lu&hash=", badge, product, clock.getTime());
    
   computeHash(buffer, hash);
   

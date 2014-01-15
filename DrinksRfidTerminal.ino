@@ -1,5 +1,7 @@
+#include <aJSON.h>
 #include <Ethernet.h>
 #include <SPI.h>
+#include <JsonParser.h>
 #include <LiquidCrystal.h>
 #include <SipHash_2_4.h>
 #include <SoftwareSerial.h>
@@ -17,77 +19,11 @@
 
 static Buttons buttons;
 static Catalog catalog;
-static Clock clock;
 static Console console;
 static Display display;
 static RfidReader rfid;
 static WebApi api;
 
-static unsigned long clockSyncTime = 0;
-static unsigned long catalogSyncTime = 0;
-
-static void syncClock()
-{
-  display.setText(1, "please wait");
-    
-  Serial.print("TIME = ");  
-      
-  unsigned long time = api.getTime();
-  
-  if( time != 0 )
-  {      
-    clockSyncTime = millis(); 
-    clock.setTime(time);
-  }
-  else
-  {
-    clockSyncTime = 0;
-  }
-
-  Serial.println(time); 
-}
-
-static void syncCatalog()
-{ 
-  Serial.println("CATALOG:");
-
-  api.getCatalog(catalog);
-
-  for( int i=0 ; i<catalog.getProductCount() ; i++ )
-  {
-    Serial.print("[");
-    Serial.print(i);
-    Serial.print("]");
-    Serial.println(catalog.getProduct(i));    
-  }
-  
-  if( catalog.getProductCount() > 0 )
-  {      
-    catalogSyncTime = millis(); 
-  }
-  else
-  {
-    catalogSyncTime = 0;
-  }
-}
-
-static void syncClockIfNeeded()
-{
-  if( clockSyncTime + CLOCK_SYNC_PERIOD < millis() ) 
-  {
-   display.setText(1, "please wait");
-   syncClock();
-  }
-}
-
-static void syncCatalogIfNeeded()
-{ 
-  if( catalogSyncTime + CATALOG_SYNC_PERIOD < millis() ) 
-  {    
-    display.setText(1, "please wait");
-    syncCatalog();
-  }
-}
 
 void setup() 
 {  
@@ -104,23 +40,11 @@ void setup()
   rfid.begin();
 
   display.setText(0, "Connecting...");    
-  
-  syncClock();
-  syncCatalog();
 }
 
 void loop() 
 {  
-  syncClockIfNeeded();
-  syncCatalogIfNeeded();
-  
-  if( clockSyncTime == 0 || catalogSyncTime == 0)
-  {
-   display.setText(0, "* * * ERROR * * *"); 
-   display.setText(1, "Connection failed");
-   delay(5000);
-   return;
-  }
+  api.sync(catalog);
   
   buttons.setCount(catalog.getProductCount());
   display.setText(0, catalog.getHeader());
@@ -134,7 +58,7 @@ void loop()
   if( badge )
   {
     Serial.println(badge);     
-    api.buy(clock.getTime(), badge, product);
+    api.buy(badge, product);
   }
 
   delay(100);
