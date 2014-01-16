@@ -23,7 +23,7 @@ char* Catalog::getProduct(int id)
 
 void Catalog::setProduct(int id,char* s)
 {
- strncpy(products[id], s, PRODUCT_NAME_MAX_SIZE); 
+ strncpy(products[id], s, PRODUCT_NAME_SIZE); 
 }
 
 char* Catalog::getHeader()
@@ -33,7 +33,7 @@ char* Catalog::getHeader()
 
 void Catalog::setHeader(char* s)
 {
-   strncpy(header, s, CATALOG_HEADER_MAX_SIZE); 
+   strncpy(header, s, CATALOG_HEADER_SIZE); 
 }
 
 

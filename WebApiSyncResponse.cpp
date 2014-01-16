@@ -5,7 +5,7 @@
 
 WebApiSyncResponse::WebApiSyncResponse(char* json)
 {
-	JsonParser<104> parser;
+	JsonParser<13> parser;
 
 	Serial.println(json);
 	JsonHashTable root = parser.parseHashTable(json);
@@ -41,7 +41,8 @@ WebApiSyncResponse::WebApiSyncResponse(char* json)
 	{
 		Serial.println("Sync: 'Products' not found");
 		products[0] = NULL;
-	}
+	}
+
 	time = root.getString("Time");
 
 	if (time == NULL)
@@ -69,6 +70,7 @@ bool WebApiSyncResponse::validateHash()
 
 void WebApiSyncResponse::getCatalog(Catalog& catalog)
 {
+	Serial.println(header);
 	catalog.setHeader(header);
 	
 	int i;

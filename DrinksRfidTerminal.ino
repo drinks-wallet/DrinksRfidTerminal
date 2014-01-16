@@ -14,9 +14,6 @@
 #include "RfidReader.h"
 #include "WebApi.h"
 
-#define CLOCK_SYNC_PERIOD  (1*60*1000UL)
-#define CATALOG_SYNC_PERIOD  (1*60*1000UL)
-
 static Buttons buttons;
 static Catalog catalog;
 static Console console;

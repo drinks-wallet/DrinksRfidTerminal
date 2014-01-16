@@ -1,9 +1,7 @@
 #ifndef _CATALOG_H
 #define _CATALOG_H
 
-#define CATALOG_MAX_COUNT        4
-#define PRODUCT_NAME_MAX_SIZE    19
-#define CATALOG_HEADER_MAX_SIZE  21
+#include "Configuration.h"
 
 class Catalog
 {
@@ -23,8 +21,8 @@ class Catalog
   private:
 
     int count;
-    char products[10][PRODUCT_NAME_MAX_SIZE];
-    char header[CATALOG_HEADER_MAX_SIZE];
+	char products[MAX_PRODUCT_COUNT][PRODUCT_NAME_SIZE];
+    char header[CATALOG_HEADER_SIZE];
 };
 
 #endif
