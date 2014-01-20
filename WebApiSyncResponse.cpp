@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <JsonParser.h>
+#include <string.h>
 
+#include "HashBuilder.h"
 #include "WebApiSyncResponse.h"
 
 WebApiSyncResponse::WebApiSyncResponse(char* json)
@@ -65,12 +67,25 @@ bool WebApiSyncResponse::isValid()
 
 bool WebApiSyncResponse::validateHash()
 {
-	return true;
+	HashBuilder hashBuilder;
+	
+	hashBuilder.print(header);
+	
+	for (int i = 0; products[i] != NULL; i++)
+		hashBuilder.print(products[i]);
+
+	hashBuilder.print(time);
+
+	char hashString[17];
+
+	hashBuilder.getResult(hashString);
+
+	return strcasecmp(hash, hashString) == 0;
+
 }
 
 void WebApiSyncResponse::getCatalog(Catalog& catalog)
 {
-	Serial.println(header);
 	catalog.setHeader(header);
 	
 	int i;
@@ -78,7 +93,7 @@ void WebApiSyncResponse::getCatalog(Catalog& catalog)
 	{
 		if (products[i] == NULL) break;
 		catalog.setProduct(i, products[i]);
-		Serial.println(products[i]);
 	}
+
 	catalog.setProductCount(i);
 }
