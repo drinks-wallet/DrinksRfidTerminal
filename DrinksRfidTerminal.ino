@@ -52,8 +52,7 @@ void loop()
   char* badge = rfid.tryRead();
 
   if( badge )
-  {
-    Serial.println(badge);     
+  { 
     api.buy(badge, product);
   }
 

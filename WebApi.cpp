@@ -4,6 +4,7 @@
 #include "Clock.h"
 #include "HttpClient.h"
 #include "WebApi.h"
+#include "WebApiBuyRequest.h"
 #include "WebApiSyncResponse.h"
 
 void WebApi::begin()
@@ -39,23 +40,16 @@ bool WebApi::sync(Catalog& catalog)
 
 bool WebApi::buy(char* badge, int product)
 {
-	if (!http.connect()) return false;
-
-	int i, j;
 	char buffer[128];
-	char* hash = buffer + sprintf(buffer, "badge=%s&product=%d&time=%lu&hash=", badge, product, clock.getTime());
 
-	//computeHash(buffer, hash);
-
-	//Serial.println(buffer);
-
-	http.performPostRequest("/drinks/api/buy", buffer);
-
-	http.readln(buffer, 64);
-
+	WebApiBuyRequest request(badge, product, clock.getTime());
+	request.getContent(buffer, sizeof(buffer));
+	
 	Serial.println(buffer);
 
-	http.disconnect();
+	http.performPostRequest("/drinks/api/buy", buffer, sizeof(buffer));
+
+	Serial.println(buffer);
 
 	return true;
 }

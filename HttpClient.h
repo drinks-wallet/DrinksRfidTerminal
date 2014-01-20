@@ -3,20 +3,20 @@
 
 class HttpClient
 {
-  public:
-    void begin();   
-    bool connect();
-    void disconnect();
-    void println();
-    void println(char*);
-    void readln(char*,int);
-    bool readblock(char*,int,char);
-    void skipHeaders();
-    boolean performGetRequest(char* path, char* content, int maxContentSize);
-    void performPostRequest(char* path, char* content);
-    
-  private:
-    void sendCommonHeader(char*,char*);
+public:
+	void begin();
+	bool connect();
+	void disconnect();
+	void println();
+	void println(char*);
+	void readln(char*, int);
+	bool readblock(char*, int, char);
+	void skipHeaders();
+	bool performGetRequest(char* path, char* content, int maxContentSize);
+	bool performPostRequest(char* path, char* content, int maxContentSize);
+
+private:
+	void sendCommonHeader(char*, char*);
 };
 
 #endif
