@@ -41,15 +41,7 @@ void HttpClient::begin()
 
 bool HttpClient::connect()
 {
-	if (client.connect(server, SERVER_PORT)) {
-		//Serial.println("connected");
-		return true;
-	}
-	else {
-		// kf you didn't get a connection to the server:
-		Serial.println("connection failed");
-		return false;
-	}
+	return client.connect(server, SERVER_PORT);
 }
 
 void HttpClient::disconnect()

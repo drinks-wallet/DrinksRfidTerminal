@@ -23,18 +23,26 @@ bool WebApi::sync(Catalog& catalog)
 
 	char buffer[160];
 
-	if (!http.performGetRequest("/drinks/api/sync", buffer, sizeof(buffer))) return false;
+	if (!http.performGetRequest("/drinks/api/sync", buffer, sizeof(buffer)))
+	{
+		Serial.println("Connection failed");
+		return false;
+	}
 
 	WebApiSyncResponse response(buffer);
 
 	if (!response.isValid())
+	{
+		Serial.println("Invalid response");
 		return false;
+	}		
 
 	response.getCatalog(catalog);
 	clock.setTime(response.getTime());
 
 	lastSyncTime = millis();
 	
+	Serial.println("Sync... OK");
 	return true;
 }
 
@@ -42,14 +50,22 @@ bool WebApi::buy(char* badge, int product)
 {
 	char buffer[128];
 
+	Serial.println("Buy...");
+
 	WebApiBuyRequest request(badge, product, clock.getTime());
 	request.getContent(buffer, sizeof(buffer));
 	
 	Serial.println(buffer);
 
-	http.performPostRequest("/drinks/api/buy", buffer, sizeof(buffer));
+	if (!http.performPostRequest("/drinks/api/buy", buffer, sizeof(buffer)))
+	{
+		Serial.println("Connection failed");
+		return false;
+	}
 
 	Serial.println(buffer);
+
+	Serial.println("Buy... OK");
 
 	return true;
 }

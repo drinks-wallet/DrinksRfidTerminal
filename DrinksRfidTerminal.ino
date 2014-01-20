@@ -40,7 +40,11 @@ void setup()
 
 void loop() 
 {  
-  api.sync(catalog);
+  if( ! api.sync(catalog) )
+  {
+    display.setText(0, "* * * ERROR * * *");    
+    display.setText(1, "Connection failed");    
+  }
   
   buttons.setCount(catalog.getProductCount());
   display.setText(0, catalog.getHeader());
