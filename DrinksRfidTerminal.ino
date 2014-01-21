@@ -21,44 +21,44 @@ static RfidReader rfid;
 static WebApi api;
 
 
-void setup() 
-{  
-  display.begin();  
-  console.begin();
+void setup()
+{
+	display.begin();
+	console.begin();
 
-  console.enter(display);
+	console.enter(display);
 
-  display.setText(0, "Initializing...");    
-  display.setText(1, "");    
+	display.setText(0, "Initializing...");
+	display.setText(1, "");
 
-  api.begin();
-  buttons.begin();
-  rfid.begin();
+	api.begin();
+	buttons.begin();
+	rfid.begin();
 
-  display.setText(0, "Connecting...");    
+	display.setText(0, "Connecting...");
 }
 
-void loop() 
-{  
-  if( ! api.sync(catalog) )
-  {
-    display.setText(0, "* * * ERROR * * *");    
-    display.setText(1, "Connection failed");    
-  }
-  
-  buttons.setCount(catalog.getProductCount());
-  display.setText(0, catalog.getHeader());
-  
-  int product = buttons.getSelectedIndex();
+void loop()
+{
+	if (!api.sync(catalog))
+	{
+		display.setText(0, "* * * ERROR * * *");
+		display.setText(1, "Connection failed");
+	}
 
-  display.setSelection(1, catalog.getProduct(product)); 
+	buttons.setCount(catalog.getProductCount());
+	display.setText(0, catalog.getHeader());
 
-  char* badge = rfid.tryRead();
+	int product = buttons.getSelectedIndex();
 
-  if( badge )
-  { 
-    api.buy(badge, product);
-  }
+	display.setSelection(1, catalog.getProduct(product));
 
-  delay(100);
+	char* badge = rfid.tryRead();
+
+	if (badge)
+	{
+		api.buy(badge, product);
+	}
+
+	delay(100);
 }
