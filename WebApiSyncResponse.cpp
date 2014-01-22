@@ -9,12 +9,11 @@ WebApiSyncResponse::WebApiSyncResponse(char* json)
 {
 	JsonParser<13> parser;
 
-	Serial.println(json);
 	JsonHashTable root = parser.parseHashTable(json);
 
 	if (!root.success())
 	{
-		Serial.println("Sync: invalid JSON");
+		//Serial.println("Sync: invalid JSON");
 		header = NULL;
 		time = NULL;
 		hash = NULL;
@@ -25,7 +24,7 @@ WebApiSyncResponse::WebApiSyncResponse(char* json)
 
 	if (header == NULL)
 	{
-		Serial.println("Sync: 'Header' not found");
+		//Serial.println("Sync: 'Header' not found");
 	}
 
 	JsonArray productsArray = root.getArray("Products");
@@ -41,7 +40,7 @@ WebApiSyncResponse::WebApiSyncResponse(char* json)
 	}
 	else
 	{
-		Serial.println("Sync: 'Products' not found");
+		//Serial.println("Sync: 'Products' not found");
 		products[0] = NULL;
 	}
 
@@ -49,14 +48,14 @@ WebApiSyncResponse::WebApiSyncResponse(char* json)
 
 	if (time == NULL)
 	{
-		Serial.println("Sync: 'Time' not found");
+		//Serial.println("Sync: 'Time' not found");
 	}
 
 	hash = root.getString("Hash");
 
 	if (hash == NULL)
 	{
-		Serial.println("Sync: 'Hash' not found");
+		//Serial.println("Sync: 'Hash' not found");
 	}
 }
 

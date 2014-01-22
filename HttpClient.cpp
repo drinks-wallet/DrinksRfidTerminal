@@ -36,12 +36,18 @@ void HttpClient::begin()
 	Serial.println();
 
 	// give the Ethernet shield a second to initialize:
-	delay(1000);
+	delay(2000);
 }
 
 bool HttpClient::connect()
 {
-	return client.connect(server, SERVER_PORT);
+	if (!client.connect(server, SERVER_PORT))
+	{
+		Serial.println("Connect failed");
+		return false;
+	}
+
+	return true;
 }
 
 void HttpClient::disconnect()
@@ -114,6 +120,9 @@ void HttpClient::sendCommonHeader(char* verb, char* path)
 
 bool HttpClient::performGetRequest(char* path, char* content, int maxContentSize)
 {
+	Serial.print("GET ");
+	Serial.println(path);
+
 	if (!connect()) return false;
 
 	sendCommonHeader("GET", path);
@@ -122,6 +131,8 @@ bool HttpClient::performGetRequest(char* path, char* content, int maxContentSize
 	skipHeaders();
 	readln(content, maxContentSize);
 
+	Serial.println(content);
+
 	disconnect();
 
 	return true;
@@ -129,6 +140,10 @@ bool HttpClient::performGetRequest(char* path, char* content, int maxContentSize
 
 bool HttpClient::performPostRequest(char* path, char* content, int maxContentSize)
 {
+	Serial.print("POST ");
+	Serial.println(path);
+	Serial.println(content);
+
 	if (!connect()) return false;
 
 	sendCommonHeader("POST", path);
@@ -140,6 +155,8 @@ bool HttpClient::performPostRequest(char* path, char* content, int maxContentSiz
 
 	skipHeaders();
 	readln(content, maxContentSize);
+
+	Serial.println(content);
 
 	disconnect();
 
