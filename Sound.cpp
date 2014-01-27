@@ -1,3 +1,11 @@
+/*
+* "Drinks" RFID Terminal
+* Buy your sodas with your company badge!
+*
+* Benoit Blanchon 2014 - MIT License
+* https://github.com/bblanchon/DrinksRfidTerminal
+*/
+
 #include <Arduino.h>
 
 #include "Pins.h"
@@ -18,16 +26,15 @@ void Sound::begin()
 
 void Sound::play(char* melody)
 {
-	int frequencies[] = { 4186, 4699, 4699, 5274, 6271, 7040, 7902 };
-	//int lowOctave[] = { 2093, 2349, 2637, 2793, 3136, 3520, 3951 };
+	int frequencies [] = { 4186, 4699, 4699, 5274, 6271, 7040, 7902 };
 
 	while (true)
 	{
 		byte note = *melody;
 
-		if (note >= 'a' && note <= 'g')		
+		if (note >= 'a' && note <= 'g')
 			tone(PIN_BUZZER, frequencies[note - 'a']);
-	
+
 		if (note >= 'A' && note <= 'G')
 			tone(PIN_BUZZER, frequencies[note - 'A'] * 2);
 
@@ -39,9 +46,9 @@ void Sound::play(char* melody)
 
 		duration = 1 << (duration - 1);
 
-		delay(75*duration);
+		delay(75 * duration);
 		noTone(PIN_BUZZER);
-		
+
 		melody++;
 		if (*melody == 0) break;
 

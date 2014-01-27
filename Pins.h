@@ -1,3 +1,11 @@
+/*
+* "Drinks" RFID Terminal
+* Buy your sodas with your company badge!
+*
+* Benoit Blanchon 2014 - MIT License
+* https://github.com/bblanchon/DrinksRfidTerminal
+*/
+
 #ifndef _PINS_H
 #define _PINS_H
 

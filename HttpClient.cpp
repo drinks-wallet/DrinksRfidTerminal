@@ -1,10 +1,17 @@
+/*
+* "Drinks" RFID Terminal
+* Buy your sodas with your company badge!
+*
+* Benoit Blanchon 2014 - MIT License
+* https://github.com/bblanchon/DrinksRfidTerminal
+*/
+
 #include <Arduino.h>
 #include <SPI.h>
 #include <Ethernet.h>
 
 #include "HttpClient.h"
 
-#define MAX_LINE_SIZE 32
 #define SERVER_PORT 8080
 
 static IPAddress server(10, 1, 130, 11);
@@ -12,8 +19,7 @@ static IPAddress server(10, 1, 130, 11);
 
 static EthernetClient client;
 
-static byte mac [] = {
-	0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02 };
+static byte mac [] = { 0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02 };
 
 void HttpClient::begin()
 {

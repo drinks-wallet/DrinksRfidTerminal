@@ -1,3 +1,11 @@
+/*
+* "Drinks" RFID Terminal
+* Buy your sodas with your company badge!
+*
+* Benoit Blanchon 2014 - MIT License
+* https://github.com/bblanchon/DrinksRfidTerminal
+*/
+
 #include <Arduino.h>
 
 #include "Console.h"
@@ -7,78 +15,78 @@
 
 void Console::begin()
 {
-  Serial.begin(9600);
+	Serial.begin(9600);
 }
 
 void Console::enter(Display& display)
 {
-  display.setText(0, "Serial console 9600");
-  display.setText(1, "Press any key");
+	display.setText(0, "Serial console 9600");
+	display.setText(1, "Press any key");
 
-  unsigned long start =  millis();
+	unsigned long start = millis();
 
-  while( ! Serial.available() )
-  {
-    if( millis() > start + WAIT_TIME ) return;
-  }
+	while (!Serial.available())
+	{
+		if (millis() > start + WAIT_TIME) return;
+	}
 
-  display.setText(1, "Connected !");
+	display.setText(1, "Connected !");
 
-  showHelp();
+	showHelp();
 
-  while (true)
-  {    
-    char s[COMMAND_MAX_SIZE];
-    
-    readCommand(s);
+	while (true)
+	{
+		char s[COMMAND_MAX_SIZE];
 
-    if (!strcmp(s,"exit"))
-    {
-      Serial.println("Exit console console");
-      break;
-    }
+		readCommand(s);
 
-    if (!strcmp(s,"help"))
-    {
-      showHelp();
-      continue;
-    }
-    
-    Serial.print("Unknown command: ");
-    Serial.println(s);
-  }    
+		if (!strcmp(s, "exit"))
+		{
+			Serial.println("Exit console console");
+			break;
+		}
+
+		if (!strcmp(s, "help"))
+		{
+			showHelp();
+			continue;
+		}
+
+		Serial.print("Unknown command: ");
+		Serial.println(s);
+	}
 }
 
 void Console::showHelp()
 {
-  Serial.println("Commands:");
-  Serial.println(" - help : show this help");
-  Serial.println(" - exit : close console, go back to normal");
+	Serial.println("Commands:");
+	Serial.println(" - help : show this help");
+	Serial.println(" - exit : close console, go back to normal");
 }
 
 void Console::readCommand(char* s)
 {
-  int i = 0;
+	int i = 0;
 
-  Serial.print("> ");
+	Serial.print("> ");
 
-  while (true)
-  {   
-    char c = Serial.read();
-    
-    if( c == '\n' )
-    {
-      s[i] = 0 ;
-      break;
-    }
+	while (true)
+	{
+		char c = Serial.read();
 
-    if( c != -1 && c != '\r' && i<COMMAND_MAX_SIZE )
-    {
-      s[i] = c;
-      i++;
-    }  
-  }
+		if (c == '\n')
+		{
+			s[i] = 0;
+			break;
+		}
 
-  Serial.println(s);
+		if (c != -1 && c != '\r' && i < COMMAND_MAX_SIZE)
+		{
+			s[i] = c;
+			i++;
+		}
+	}
+
+	Serial.println(s);
 }
 

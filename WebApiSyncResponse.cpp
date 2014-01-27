@@ -1,3 +1,11 @@
+/*
+* "Drinks" RFID Terminal
+* Buy your sodas with your company badge!
+*
+* Benoit Blanchon 2014 - MIT License
+* https://github.com/bblanchon/DrinksRfidTerminal
+*/
+
 #include <Arduino.h>
 #include <JsonParser.h>
 #include <string.h>
@@ -67,9 +75,9 @@ bool WebApiSyncResponse::isValid()
 bool WebApiSyncResponse::validateHash()
 {
 	HashBuilder hashBuilder;
-	
+
 	hashBuilder.print(header);
-	
+
 	for (int i = 0; products[i] != NULL; i++)
 		hashBuilder.print(products[i]);
 
@@ -86,7 +94,7 @@ bool WebApiSyncResponse::validateHash()
 void WebApiSyncResponse::getCatalog(Catalog& catalog)
 {
 	catalog.setHeader(header);
-	
+
 	int i;
 	for (i = 0; i < 4; i++)
 	{

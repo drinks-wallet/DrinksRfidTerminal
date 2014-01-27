@@ -1,3 +1,11 @@
+/*
+* "Drinks" RFID Terminal
+* Buy your sodas with your company badge!
+*
+* Benoit Blanchon 2014 - MIT License
+* https://github.com/bblanchon/DrinksRfidTerminal
+*/
+
 #include <Ethernet.h>
 #include <SPI.h>
 #include <JsonParser.h>
@@ -82,7 +90,7 @@ void loop()
 bool buy(char* badge, int product)
 {
 	WebApiBuyTransaction buyTransaction(badge, product, clock.getTime());
-	
+
 	if (!buyTransaction.perform(http))
 		return false;
 
@@ -90,7 +98,7 @@ bool buy(char* badge, int product)
 	display.setText(1, buyTransaction.getMessage(1));
 	sound.play(buyTransaction.getMelody());
 	delay(3000);
-	
+
 	return true;
 }
 

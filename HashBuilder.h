@@ -1,5 +1,13 @@
-#ifndef _HASH_H
-#define _HASH_H
+/*
+* "Drinks" RFID Terminal
+* Buy your sodas with your company badge!
+*
+* Benoit Blanchon 2014 - MIT License
+* https://github.com/bblanchon/DrinksRfidTerminal
+*/
+
+#ifndef _HASHBUILDER_H
+#define _HASHBUILDER_H
 
 class HashBuilder
 {
