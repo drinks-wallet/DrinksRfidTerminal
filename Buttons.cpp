@@ -12,6 +12,8 @@
 #include "Buttons.h"
 #include "Pins.h"
 
+#define DEBOUNCE_PERIOD		200
+
 static int selectedIndex = 0;
 static int count = 1;
 static unsigned long keyPressTime = 0;

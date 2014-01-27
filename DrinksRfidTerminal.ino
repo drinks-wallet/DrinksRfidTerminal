@@ -23,6 +23,8 @@
 #include "WebApiSyncResponse.h"
 #include "WebApiBuyTransaction.h"
 
+#define SYNC_PERIOD	60000L
+
 static Buttons buttons;
 static Catalog catalog;
 static Clock clock;

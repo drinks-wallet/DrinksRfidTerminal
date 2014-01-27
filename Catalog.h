@@ -26,6 +26,10 @@ public:
 	char* getHeader();
 	void setHeader(char*);
 
+	static const int MAX_PRODUCT_COUNT = 4;
+	static const int PRODUCT_NAME_SIZE = 19;
+	static const int CATALOG_HEADER_SIZE = 21;
+
 private:
 
 	int count;
