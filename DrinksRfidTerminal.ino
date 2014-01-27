@@ -16,7 +16,6 @@
 #include "Buttons.h"
 #include "Catalog.h"
 #include "Clock.h"
-#include "Console.h"
 #include "Display.h"
 #include "HttpClient.h"
 #include "RfidReader.h"
@@ -27,7 +26,6 @@
 static Buttons buttons;
 static Catalog catalog;
 static Clock clock;
-static Console console;
 static Display display;
 static HttpClient http;
 static RfidReader rfid;
@@ -37,10 +35,9 @@ unsigned long lastSyncTime = 0;
 
 void setup()
 {
-	display.begin();
-	console.begin();
+	Serial.begin(9600);
 
-	//console.enter(display);
+	display.begin();
 
 	display.setText(0, "Initializing...");
 	display.setText(1, "");
