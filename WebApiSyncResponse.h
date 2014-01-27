@@ -6,6 +6,9 @@
 * https://github.com/bblanchon/DrinksRfidTerminal
 */
 
+#ifndef _WEBAPISYNCRESPONSE_H
+#define _WEBAPISYNCRESPONSE_H
+
 #include "Catalog.h"
 #include <stdlib.h>
 
@@ -29,3 +32,5 @@ private:
 	char* products[5];
 	char* hash;
 };
+
+#endif
