@@ -28,5 +28,5 @@ void WebApiBuyRequest::getContent(char* buffer, int size)
 
 	computeHash(hash);
 
-	snprintf(buffer, size, "{Badge=\"%s\",Hash=\"%s\",Product=%s,Time=%s}", badge, hash, product, time);
+	snprintf(buffer, size, "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hash, product, time);
 }
