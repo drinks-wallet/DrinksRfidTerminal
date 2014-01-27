@@ -9,22 +9,21 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <Ethernet.h>
+#include <Dns.h>
 
 #include "Configuration.h"
 #include "HttpClient.h"
 
-#define SERVER_PORT 8080
-
-static IPAddress server(10, 1, 130, 11);
-// char server[] = "lbotelho-pc";
-
-static EthernetClient client;
-
-static byte mac[6] = MAC_ADDRESS;
+#define xstr(s) str(s)
+#define str(s) #s
 
 void HttpClient::begin()
 {
 	delay(100);
+
+	byte mac[6] = MAC_ADDRESS;
+
+	Serial.println("DHCP...");
 
 	// start the Ethernet connection:
 	if (Ethernet.begin(mac) == 0) {
@@ -33,22 +32,32 @@ void HttpClient::begin()
 		for (;;)
 			;
 	}
-	// print your local IP address:
-	Serial.print("My IP address: ");
-	for (byte thisByte = 0; thisByte < 4; thisByte++) {
-		// print the value of each byte of the IP address:
-		Serial.print(Ethernet.localIP()[thisByte], DEC);
-		Serial.print(".");
-	}
-	Serial.println();
 
-	// give the Ethernet shield a second to initialize:
-	delay(2000);
+	Serial.print("Address=");
+	Serial.println(Ethernet.localIP());
+	
+	Serial.print("Subnet=");
+	Serial.println(Ethernet.subnetMask());
+	
+	Serial.print("DNS=");
+	Serial.println(Ethernet.dnsServerIP());
+
+	Serial.println("Resolve " SERVER_NAME "...");
+	
+	DNSClient dns;
+
+	dns.begin(Ethernet.dnsServerIP());
+
+	while (1 != dns.getHostByName(SERVER_NAME, serverIp));
+
+	Serial.print("Address=");
+	Serial.println(serverIp);
+
 }
 
 bool HttpClient::connect()
 {
-	if (!client.connect(server, SERVER_PORT))
+	if (!client.connect(serverIp, SERVER_PORT))
 	{
 		Serial.println("Connect failed");
 		return false;
@@ -119,8 +128,7 @@ void HttpClient::sendCommonHeader(char* verb, char* path)
 	client.print(" ");
 	client.print(path);
 	client.println(" HTTP/1.1");
-	client.print("Host: 10.1.130.11:");
-	client.println(SERVER_PORT);
+	client.println("Host: " SERVER_NAME ":" xstr(SERVER_PORT));
 	client.println("Accept: application/json");
 	client.println("Connection: close");
 }

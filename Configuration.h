@@ -13,4 +13,8 @@
 
 #define MAC_ADDRESS {0x00,0xAA,0xBB,0xCC,0xDE,0x02 }
 
+#define SERVER_NAME "lbotelho-pc.satimo2000.local"
+
+#define SERVER_PORT 8080
+
 #endif

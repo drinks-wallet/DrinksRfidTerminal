@@ -9,6 +9,8 @@
 #ifndef _HTTPCLIENT_H
 #define _HTTPCLIENT_H
 
+#include <Ethernet.h>
+
 class HttpClient
 {
 public:
@@ -26,6 +28,9 @@ private:
 	void readln(char*, int);
 	bool readblock(char*, int, char);
 	void skipHeaders();
+
+	IPAddress serverIp;
+	EthernetClient client;
 };
 
 #endif
