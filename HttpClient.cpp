@@ -10,6 +10,7 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
+#include "Configuration.h"
 #include "HttpClient.h"
 
 #define SERVER_PORT 8080
@@ -19,7 +20,7 @@ static IPAddress server(10, 1, 130, 11);
 
 static EthernetClient client;
 
-static byte mac [] = { 0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02 };
+static byte mac[6] = MAC_ADDRESS;
 
 void HttpClient::begin()
 {
