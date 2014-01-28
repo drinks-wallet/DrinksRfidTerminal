@@ -17,6 +17,8 @@
 #define xstr(s) str(s)
 #define str(s) #s
 
+#define NOT_EMPTY(s) (s[0]!=0 && s[0]!='\r' && s[0]!='\n')
+
 void HttpClient::begin()
 {
 	delay(100);
@@ -26,11 +28,9 @@ void HttpClient::begin()
 	Serial.println("DHCP...");
 
 	// start the Ethernet connection:
-	if (Ethernet.begin(mac) == 0) {
-		Serial.println("Failed to configure Ethernet using DHCP");
-		// no point in carrying on, so do nothing forevermore:
-		for (;;)
-			;
+	while (0 == Ethernet.begin(mac)) 
+	{
+		Serial.println("Failed. Retry...");
 	}
 
 	Serial.print("Address=");
@@ -48,45 +48,17 @@ void HttpClient::begin()
 
 	dns.begin(Ethernet.dnsServerIP());
 
-	while (1 != dns.getHostByName(SERVER_NAME, serverIp));
+	while (1 != dns.getHostByName(SERVER_NAME, serverIp))
+	{
+		Serial.println("Failed. Retry...");
+	}
 
 	Serial.print("Address=");
 	Serial.println(serverIp);
 
 }
 
-bool HttpClient::connect()
-{
-	if (!client.connect(serverIp, SERVER_PORT))
-	{
-		Serial.println("Connect failed");
-		return false;
-	}
-
-	return true;
-}
-
-void HttpClient::disconnect()
-{
-	client.stop();
-}
-
-void HttpClient::println()
-{
-	client.println();
-}
-
-void HttpClient::println(char* s)
-{
-	client.println(s);
-}
-
 void HttpClient::readln(char* buffer, int size)
-{
-	readblock(buffer, size, '\n');
-}
-
-bool HttpClient::readblock(char* buffer, int size, char terminator)
 {
 	int i;
 
@@ -97,85 +69,70 @@ bool HttpClient::readblock(char* buffer, int size, char terminator)
 			if (!client.connected())
 			{
 				buffer[i] = 0;
-				return false;
+				return;
 			}
 		}
 
 		buffer[i] = client.read();
-		//Serial.print(buffer[i]);
+		// Serial.print(buffer[i]); 
 
-		if (buffer[i] == terminator)
+		if (buffer[i] == '\n')
 			break;
 	}
 
 	buffer[i] = 0;
-	return true;
 }
 
-
-void HttpClient::skipHeaders()
+bool HttpClient::perform(char* request, char* content, int maxContentSize)
 {
-	char line[32];
-	do
+	/*
+	 * 1. SEND REQUEST
+	 */
+
+	Serial.println(request);	
+
+	if (!client.connect(serverIp, SERVER_PORT))
 	{
-		readln(line, sizeof(line));
-	} while (line[0] != '\r' && line[0] != '\n');
-}
-
-void HttpClient::sendCommonHeader(char* verb, char* path)
-{
-	client.print(verb);
-	client.print(" ");
-	client.print(path);
+		Serial.println("Connect failed");
+		return false;
+	}
+	
+	client.print(request);
 	client.println(" HTTP/1.1");
 	client.println("Host: " SERVER_NAME ":" xstr(SERVER_PORT));
 	client.println("Accept: application/json");
 	client.println("Connection: close");
-}
 
-bool HttpClient::performGetRequest(char* path, char* content, int maxContentSize)
-{
-	Serial.print("GET ");
-	Serial.println(path);
+	if (content[0])
+	{
+		client.println("Content-Type: application/json");
+		client.print("Content-Length: ");
+		client.println(strlen(content));
+		client.println();
 
-	if (!connect()) return false;
+		Serial.println(content);
+		client.println(content);
+	}
+	else
+	{
+		client.println();
+	}
 
-	sendCommonHeader("GET", path);
-	client.println();
+	/*
+	 * 2. READ RESPONSE
+	 */		
+	
+	// skip HTTP headers
+	while (readln(content, maxContentSize), NOT_EMPTY(content));
 
-	skipHeaders();
+	// read content
 	readln(content, maxContentSize);
-
+		
 	Serial.println(content);
 
-	disconnect();
+	client.stop();
 
-	return true;
-}
-
-bool HttpClient::performPostRequest(char* path, char* content, int maxContentSize)
-{
-	Serial.print("POST ");
-	Serial.println(path);
-	Serial.println(content);
-
-	if (!connect()) return false;
-
-	sendCommonHeader("POST", path);
-	client.println("Content-Type: application/json");
-	client.print("Content-Length: ");
-	client.println(strlen(content));
-	client.println();
-	client.println(content);
-
-	skipHeaders();
-	readln(content, maxContentSize);
-
-	Serial.println(content);
-
-	disconnect();
-
-	return true;
+	return content[0] != 0;
 }
 
 

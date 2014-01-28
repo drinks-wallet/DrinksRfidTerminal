@@ -109,7 +109,9 @@ bool sync()
 
 	char buffer[160];
 
-	if (!http.performGetRequest("/drinks/api/sync", buffer, sizeof(buffer)))
+	buffer[0] = 0;
+
+	if (!http.perform("GET /drinks/api/sync", buffer, sizeof(buffer)))
 		return false;
 
 	WebApiSyncResponse response(buffer);

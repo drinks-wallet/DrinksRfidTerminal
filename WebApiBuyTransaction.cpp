@@ -20,7 +20,7 @@ WebApiBuyTransaction::WebApiBuyTransaction(char* badge, int product, unsigned lo
 
 bool WebApiBuyTransaction::perform(HttpClient& http)
 {
-	if (!http.performPostRequest("/drinks/api/buy", buffer, sizeof(buffer)))
+	if (!http.perform("POST /drinks/api/buy", buffer, sizeof(buffer)))
 		return false;
 
 	WebApiBuyResponse response(buffer);
