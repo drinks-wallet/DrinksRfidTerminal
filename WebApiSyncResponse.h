@@ -16,9 +16,7 @@ class WebApiSyncResponse
 {
 public:
 
-	WebApiSyncResponse(char* json);
-
-	bool isValid();
+	bool parse(char* json);	
 
 	void getCatalog(Catalog&);
 	unsigned long getTime() { return strtoul(time, 0, 10); }

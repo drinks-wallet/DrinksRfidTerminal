@@ -13,63 +13,33 @@
 #include "HashBuilder.h"
 #include "WebApiSyncResponse.h"
 
-WebApiSyncResponse::WebApiSyncResponse(char* json)
+bool WebApiSyncResponse::parse(char* json)
 {
 	JsonParser<13> parser;
 
 	JsonHashTable root = parser.parseHashTable(json);
-
-	if (!root.success())
-	{
-		//Serial.println("Sync: invalid JSON");
-		header = NULL;
-		time = NULL;
-		hash = NULL;
-		return;
-	}
+	if (!root.success()) return false;
 
 	header = root.getString("Header");
-
-	if (header == NULL)
-	{
-		//Serial.println("Sync: 'Header' not found");
-	}
+	if (header == NULL) return false;
 
 	JsonArray productsArray = root.getArray("Products");
+	if (!productsArray.success()) return false;
 
-	if (productsArray.success())
+	int count = productsArray.getLength();
+	for (int i = 0; i < count; i++)
 	{
-		int count = productsArray.getLength();
-		for (int i = 0; i < count; i++)
-		{
-			products[i] = productsArray.getString(i);
-		}
-		products[count] = NULL;
+		products[i] = productsArray.getString(i);
 	}
-	else
-	{
-		//Serial.println("Sync: 'Products' not found");
-		products[0] = NULL;
-	}
+	products[count] = NULL;
 
 	time = root.getString("Time");
-
-	if (time == NULL)
-	{
-		//Serial.println("Sync: 'Time' not found");
-	}
+	if (time == NULL) return false;
 
 	hash = root.getString("Hash");
+	if (hash == NULL) return false;
 
-	if (hash == NULL)
-	{
-		//Serial.println("Sync: 'Hash' not found");
-	}
-}
-
-bool WebApiSyncResponse::isValid()
-{
-	return header != NULL && products[0] != NULL && time != 0 && validateHash();
+	return validateHash();
 }
 
 bool WebApiSyncResponse::validateHash()
@@ -88,7 +58,6 @@ bool WebApiSyncResponse::validateHash()
 	hashBuilder.getResult(hashString);
 
 	return strcasecmp(hash, hashString) == 0;
-
 }
 
 void WebApiSyncResponse::getCatalog(Catalog& catalog)

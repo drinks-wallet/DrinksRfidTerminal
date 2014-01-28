@@ -20,7 +20,7 @@
 #include "HttpClient.h"
 #include "RfidReader.h"
 #include "Sound.h"
-#include "WebApiSyncResponse.h"
+#include "WebApiSyncTransaction.h"
 #include "WebApiBuyTransaction.h"
 
 #define SYNC_PERIOD	60000L
@@ -107,23 +107,13 @@ bool sync()
 	if (lastSyncTime != 0 && millis() < lastSyncTime + SYNC_PERIOD)
 		return true;
 
-	char buffer[160];
+	WebApiSyncTransaction syncTransaction;
 
-	buffer[0] = 0;
-
-	if (!http.perform("GET /drinks/api/sync", buffer, sizeof(buffer)))
+	if (!syncTransaction.perform(http))
 		return false;
-
-	WebApiSyncResponse response(buffer);
-
-	if (!response.isValid())
-	{
-		Serial.println("Invalid response");
-		return false;
-	}
-
-	response.getCatalog(catalog);
-	clock.setTime(response.getTime());
+	
+	syncTransaction.getCatalog(catalog);
+	clock.setTime(syncTransaction.getTime());
 
 	lastSyncTime = millis();
 
