@@ -12,10 +12,9 @@
 #include "Configuration.h"
 #include "HashBuilder.h"
 
-static unsigned char key[16] = PRIVATE_KEY;
-
 HashBuilder::HashBuilder()
 {
+	unsigned char key[16] = PRIVATE_KEY;
 	sipHash.initFromRAM(key);
 }
 
