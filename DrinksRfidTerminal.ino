@@ -88,9 +88,9 @@ void loop()
 
 bool buy(char* badge, int product)
 {
-	WebApiBuyTransaction buyTransaction(badge, product, clock.getTime());
+	WebApiBuyTransaction buyTransaction(http);
 
-	if (!buyTransaction.perform(http))
+	if (!buyTransaction.perform(badge, product, clock.getTime()))
 		return false;
 
 	display.setText(0, buyTransaction.getMessage(0));

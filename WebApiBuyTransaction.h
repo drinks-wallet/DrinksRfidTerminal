@@ -15,17 +15,31 @@ class WebApiBuyTransaction
 {
 public:
 
-	WebApiBuyTransaction(char* badge, int product, unsigned long time);
-	bool perform(HttpClient&);
+	WebApiBuyTransaction(HttpClient& http)
+		:http(http)
+	{
+	}
+
+	bool perform(char* badge, int product, unsigned long time)
+	{
+		return send(badge, product, time) && parse() && validate();
+	}
 
 	char* getMelody() { return melody; }
 	char* getMessage(int i) { return messages[i]; }
 
 private:
 
+	bool send(char*, int, unsigned long);
+	bool parse();
+	bool validate();
+
+	HttpClient& http;
 	char buffer[150];
-	char* melody;
+	char* hash;
 	char* messages[2];
+	char* melody;
+	char* time;
 };
 
 #endif

@@ -7,33 +7,66 @@
 */
 
 #include <Arduino.h>
+#include <JsonParser.h>
 
-#include "WebApiBuyRequest.h"
-#include "WebApiBuyResponse.h"
+#include "HashBuilder.h"
 #include "WebApiBuyTransaction.h"
 
-WebApiBuyTransaction::WebApiBuyTransaction(char* badge, int product, unsigned long time)
+bool WebApiBuyTransaction::send(char* badge, int product, unsigned long time)
 {
-	WebApiBuyRequest request(badge, product, time);
-	request.getContent(buffer, sizeof(buffer));
+	char productString[2];
+	char timeString[11];
+	char hash[17];
+
+	sprintf(productString, "%d", product);
+	sprintf(timeString, "%lu", time);
+
+	HashBuilder hashBuilder;
+	hashBuilder.print(badge);
+	hashBuilder.print(productString);
+	hashBuilder.print(timeString);
+	hashBuilder.getResult(hash);
+
+	snprintf(buffer, sizeof(buffer), "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hash, productString, timeString);
+
+	return http.perform("POST /drinks/api/buy", buffer, sizeof(buffer));
 }
 
-bool WebApiBuyTransaction::perform(HttpClient& http)
+bool WebApiBuyTransaction::parse()
 {
-	if (!http.perform("POST /drinks/api/buy", buffer, sizeof(buffer)))
-		return false;
+	JsonParser<13> parser;
 
-	WebApiBuyResponse response(buffer);
+	JsonHashTable root = parser.parseHashTable(buffer);
+	if (!root.success()) return false;
 
-	if (!response.isValid())
-	{
-		Serial.println("Invalid response");
-		return false;
-	}
+	melody = root.getString("Melody");
+	if (melody == NULL) return false;
 
-	melody = response.getMelody();
-	messages[0] = response.getMessage(0);
-	messages[1] = response.getMessage(1);
+	JsonArray messageArray = root.getArray("Message");
+	if (!messageArray.success()) return false;
+	
+	messages[0] = messageArray.getString(0);
+	messages[1] = messageArray.getString(1);
+
+	time = root.getString("Time");
+	if (time == NULL) return false;
+
+	hash = root.getString("Hash");
+	if (hash == NULL) return false;
 
 	return true;
+}
+
+bool WebApiBuyTransaction::validate()
+{
+	char computedHash[17];
+
+	HashBuilder hashBuilder;
+	hashBuilder.print(melody);
+	hashBuilder.print(messages[0]);
+	hashBuilder.print(messages[1]);
+	hashBuilder.print(time);
+	hashBuilder.getResult(computedHash);
+
+	return strcasecmp(hash, computedHash) == 0;
 }
