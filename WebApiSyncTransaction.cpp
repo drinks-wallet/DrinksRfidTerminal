@@ -12,7 +12,7 @@
 #include "HashBuilder.h"
 #include "WebApiSyncTransaction.h"
 
-bool WebApiSyncTransaction::send(HttpClient& http)
+bool WebApiSyncTransaction::send()
 {
 	buffer[0] = 0;
 
@@ -48,7 +48,7 @@ bool WebApiSyncTransaction::parse()
 	return true;
 }
 
-bool WebApiSyncTransaction::validateHash()
+bool WebApiSyncTransaction::validate()
 {
 	HashBuilder hashBuilder;
 

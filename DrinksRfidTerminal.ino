@@ -107,9 +107,9 @@ bool sync()
 	if (lastSyncTime != 0 && millis() < lastSyncTime + SYNC_PERIOD)
 		return true;
 
-	WebApiSyncTransaction syncTransaction;
+	WebApiSyncTransaction syncTransaction(http);
 
-	if (!syncTransaction.perform(http))
+	if (!syncTransaction.perform())
 		return false;
 	
 	syncTransaction.getCatalog(catalog);

@@ -16,9 +16,15 @@ class WebApiSyncTransaction
 {
 public:
 
-	bool perform(HttpClient& http)
+	WebApiSyncTransaction(HttpClient& http)
+		: http(http)
 	{
-		return send(http) && parse() && validateHash();
+
+	}
+
+	bool perform()
+	{
+		return send() && parse() && validate();
 	}
 
 	void getCatalog(Catalog&);
@@ -26,10 +32,11 @@ public:
 
 private:
 
-	bool send(HttpClient&);
+	bool send();
 	bool parse();
-	bool validateHash();
+	bool validate();
 
+	HttpClient& http;
 	char buffer[150];	
 	char* time;
 	char* header;
