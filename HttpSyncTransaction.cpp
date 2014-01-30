@@ -10,16 +10,16 @@
 #include <JsonParser.h>
 
 #include "HashBuilder.h"
-#include "WebApiSyncTransaction.h"
+#include "HttpSyncTransaction.h"
 
-bool WebApiSyncTransaction::send()
+bool HttpSyncTransaction::send()
 {
 	buffer[0] = 0;
 
 	return http.perform("GET /drinks/api/sync", buffer, sizeof(buffer));
 }
 
-bool WebApiSyncTransaction::parse()
+bool HttpSyncTransaction::parse()
 {
 	JsonParser<13> parser;
 
@@ -48,7 +48,7 @@ bool WebApiSyncTransaction::parse()
 	return true;
 }
 
-bool WebApiSyncTransaction::validate()
+bool HttpSyncTransaction::validate()
 {
 	HashBuilder hashBuilder;
 
@@ -66,7 +66,7 @@ bool WebApiSyncTransaction::validate()
 	return strcasecmp(hash, hashString) == 0;
 }
 
-void WebApiSyncTransaction::getCatalog(Catalog& catalog)
+void HttpSyncTransaction::getCatalog(Catalog& catalog)
 {
 	catalog.setHeader(header);
 

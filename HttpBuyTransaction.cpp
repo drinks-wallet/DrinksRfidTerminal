@@ -10,9 +10,9 @@
 #include <JsonParser.h>
 
 #include "HashBuilder.h"
-#include "WebApiBuyTransaction.h"
+#include "HttpBuyTransaction.h"
 
-bool WebApiBuyTransaction::send(char* badge, int product, unsigned long time)
+bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 {
 	char productString[2];
 	char timeString[11];
@@ -32,7 +32,7 @@ bool WebApiBuyTransaction::send(char* badge, int product, unsigned long time)
 	return http.perform("POST /drinks/api/buy", buffer, sizeof(buffer));
 }
 
-bool WebApiBuyTransaction::parse()
+bool HttpBuyTransaction::parse()
 {
 	JsonParser<13> parser;
 
@@ -57,7 +57,7 @@ bool WebApiBuyTransaction::parse()
 	return true;
 }
 
-bool WebApiBuyTransaction::validate()
+bool HttpBuyTransaction::validate()
 {
 	char computedHash[17];
 

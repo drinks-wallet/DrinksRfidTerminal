@@ -17,11 +17,11 @@
 #include "Catalog.h"
 #include "Clock.h"
 #include "Display.h"
+#include "HttpBuyTransaction.h"
 #include "HttpClient.h"
+#include "HttpSyncTransaction.h"
 #include "RfidReader.h"
 #include "Sound.h"
-#include "WebApiSyncTransaction.h"
-#include "WebApiBuyTransaction.h"
 
 #define SYNC_PERIOD	60000L
 
@@ -88,7 +88,7 @@ void loop()
 
 bool buy(char* badge, int product)
 {
-	WebApiBuyTransaction buyTransaction(http);
+	HttpBuyTransaction buyTransaction(http);
 
 	if (!buyTransaction.perform(badge, product, clock.getTime()))
 		return false;
@@ -107,7 +107,7 @@ bool sync()
 	if (lastSyncTime != 0 && millis() < lastSyncTime + SYNC_PERIOD)
 		return true;
 
-	WebApiSyncTransaction syncTransaction(http);
+	HttpSyncTransaction syncTransaction(http);
 
 	if (!syncTransaction.perform())
 		return false;

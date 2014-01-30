@@ -6,16 +6,16 @@
 * https://github.com/bblanchon/DrinksRfidTerminal
 */
 
-#ifndef _WEBAPIBUYTRANSACTION_H
-#define _WEBAPIBUYTRANSACTION_H
+#ifndef _HTTPBUYTRANSACTION_H
+#define _HTTPBUYTRANSACTION_H
 
 #include "HttpClient.h"
 
-class WebApiBuyTransaction
+class HttpBuyTransaction
 {
 public:
 
-	WebApiBuyTransaction(HttpClient& http)
+	HttpBuyTransaction(HttpClient& http)
 		:http(http)
 	{
 	}

@@ -6,17 +6,17 @@
 * https://github.com/bblanchon/DrinksRfidTerminal
 */
 
-#ifndef _WEBAPISYNCTRANSACTION_H
-#define _WEBAPISYNCTRANSACTION_H
+#ifndef _HTTPSYNCTRANSACTION_H
+#define _HTTPSYNCTRANSACTION_H
 
 #include "Catalog.h"
 #include "HttpClient.h"
 
-class WebApiSyncTransaction
+class HttpSyncTransaction
 {
 public:
 
-	WebApiSyncTransaction(HttpClient& http)
+	HttpSyncTransaction(HttpClient& http)
 		: http(http)
 	{
 
