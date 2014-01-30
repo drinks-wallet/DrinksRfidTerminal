@@ -59,11 +59,7 @@ bool HttpSyncTransaction::validate()
 
 	hashBuilder.print(time);
 
-	char hashString[17];
-
-	hashBuilder.getResult(hashString);
-
-	return strcasecmp(hash, hashString) == 0;
+	return strcasecmp(hash, hashBuilder.getHash()) == 0;
 }
 
 void HttpSyncTransaction::getCatalog(Catalog& catalog)

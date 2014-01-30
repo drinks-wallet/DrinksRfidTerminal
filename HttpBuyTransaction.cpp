@@ -16,8 +16,7 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 {
 	char productString[2];
 	char timeString[11];
-	char hash[17];
-
+	
 	sprintf(productString, "%d", product);
 	sprintf(timeString, "%lu", time);
 
@@ -25,9 +24,8 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 	hashBuilder.print(badge);
 	hashBuilder.print(productString);
 	hashBuilder.print(timeString);
-	hashBuilder.getResult(hash);
 
-	snprintf(buffer, sizeof(buffer), "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hash, productString, timeString);
+	snprintf(buffer, sizeof(buffer), "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hashBuilder.getHash(), productString, timeString);
 
 	return http.perform("POST /drinks/api/buy", buffer, sizeof(buffer));
 }
@@ -59,14 +57,11 @@ bool HttpBuyTransaction::parse()
 
 bool HttpBuyTransaction::validate()
 {
-	char computedHash[17];
-
 	HashBuilder hashBuilder;
 	hashBuilder.print(melody);
 	hashBuilder.print(messages[0]);
 	hashBuilder.print(messages[1]);
 	hashBuilder.print(time);
-	hashBuilder.getResult(computedHash);
 
-	return strcasecmp(hash, computedHash) == 0;
+	return strcasecmp(hash, hashBuilder.getHash()) == 0;
 }

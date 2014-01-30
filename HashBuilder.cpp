@@ -18,14 +18,15 @@ HashBuilder::HashBuilder()
 	sipHash.initFromRAM(key);
 }
 
-void HashBuilder::getResult(char* destination)
+char* HashBuilder::getHash()
 {
 	sipHash.finish();
 
 	for (int i = 0; i < 8; i++)
-		sprintf(destination + 2 * i, "%02X", sipHash.result[i]);
+		sprintf(hash + 2 * i, "%02X", sipHash.result[i]);
 
-	destination[16] = 0;
+	hash[16] = 0;
+	return hash;
 }
 
 void HashBuilder::print(char* source)

@@ -15,7 +15,10 @@ public:
 
 	HashBuilder();
 	void print(char*);
-	void getResult(char*);
+	char* getHash();
+
+private:
+	char hash[17];
 };
 
 #endif
