@@ -17,8 +17,8 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 	char productString[2];
 	char timeString[11];
 	
-	sprintf(productString, "%d", product);
-	sprintf(timeString, "%lu", time);
+	snprintf(productString, sizeof(productString), "%d", product);
+	snprintf(timeString, sizeof(timeString), "%lu", time);
 
 	HashBuilder hashBuilder;
 	hashBuilder.print(badge);

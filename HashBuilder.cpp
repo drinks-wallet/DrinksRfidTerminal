@@ -23,7 +23,7 @@ char* HashBuilder::getHash()
 	sipHash.finish();
 
 	for (int i = 0; i < 8; i++)
-		sprintf(hash + 2 * i, "%02X", sipHash.result[i]);
+		snprintf(hash + 2 * i, 3, "%02X", sipHash.result[i]);
 
 	hash[16] = 0;
 	return hash;
