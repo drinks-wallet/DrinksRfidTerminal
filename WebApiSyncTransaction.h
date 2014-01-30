@@ -9,22 +9,32 @@
 #ifndef _WEBAPISYNCTRANSACTION_H
 #define _WEBAPISYNCTRANSACTION_H
 
+#include "Catalog.h"
 #include "HttpClient.h"
-#include "WebApiSyncResponse.h"
 
 class WebApiSyncTransaction
 {
 public:
 
-	bool perform(HttpClient&);
+	bool perform(HttpClient& http)
+	{
+		return send(http) && parse() && validateHash();
+	}
 
-	void getCatalog(Catalog& c) { response.getCatalog(c); }
-	unsigned long getTime() { return response.getTime(); }
+	void getCatalog(Catalog&);
+	unsigned long getTime() { return strtoul(time, 0, 10); }
 
 private:
 
-	char buffer[150];
-	WebApiSyncResponse response;
+	bool send(HttpClient&);
+	bool parse();
+	bool validateHash();
+
+	char buffer[150];	
+	char* time;
+	char* header;
+	char* products[5];
+	char* hash;
 };
 
 #endif
