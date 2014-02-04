@@ -68,12 +68,10 @@ void loop()
 
 	if (buttons.leftPressed())
 	{
-		delay(150);
 		moveSelectedProduct(-1);
 	}
 	else if (buttons.rightPressed())
 	{
-		delay(150);
 		moveSelectedProduct(+1);
 	}
 

@@ -20,6 +20,7 @@ public:
     bool rightPressed()
     {
         if (!isRightButtonPressed) return false;
+        delay(100);
         isRightButtonPressed = false;
         return true;
     }
@@ -27,6 +28,7 @@ public:
     bool leftPressed()
     {
         if (!isLeftButtonPressed) return false;
+        delay(100);
         isLeftButtonPressed = false;
         return true;
     }
