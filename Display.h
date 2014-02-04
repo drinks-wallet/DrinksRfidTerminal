@@ -9,6 +9,8 @@
 #ifndef _DISPLAY_H
 #define _DISPLAY_H
 
+#include "Pins.h"
+
 class Display
 {
 public:
@@ -18,6 +20,11 @@ public:
 	void setSelection(int, char*);
 	void setError();
 	void setBusy();
+	
+	void setBacklight(byte intensity)
+	{
+		analogWrite(PIN_LCD_LIGHT, intensity);
+	}
 };
 
 #endif

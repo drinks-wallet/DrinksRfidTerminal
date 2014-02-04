@@ -19,6 +19,7 @@ static LiquidCrystal lcd(PIN_LCD_RS, PIN_LCD_EN, PIN_LCD_D4, PIN_LCD_D5, PIN_LCD
 
 void Display::begin()
 {
+	pinMode(PIN_LCD_LIGHT, OUTPUT);
 	lcd.begin(SCREEN_COLUMNS, 2);
 	delay(100);
 }

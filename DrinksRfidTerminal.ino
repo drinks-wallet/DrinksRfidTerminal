@@ -46,6 +46,7 @@ void setup()
 
 	display.setText(0, "Initializing...");
 	display.setText(1, "");
+	display.setBacklight(255);
 
 	sound.begin();
 	http.begin();
@@ -91,7 +92,20 @@ void loop()
 			}
 			return;
 		}
-	}	
+	}
+	else
+	{
+		unsigned long remainingTime = lastEventTime + IDLE_PERIOD - now;
+
+		if (remainingTime < 1024)
+		{
+			display.setBacklight(remainingTime / 4);
+		}
+		else
+		{
+			display.setBacklight(255);
+		}
+	}
 
 	char* badge = rfid.tryRead();
 
@@ -123,6 +137,7 @@ bool buy(char* badge, int product)
 {
 	lastEventTime = millis();
 
+	display.setBacklight(255);
 	display.setBusy();
 
 	HttpBuyTransaction buyTransaction(http);
