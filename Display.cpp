@@ -54,3 +54,15 @@ void Display::setSelection(int line, char* s)
 
 	lcd.print('>');
 }
+
+void Display::setBusy()
+{
+	setText(0, "Please wait...");
+	setText(1, "");
+}
+
+void Display::setError()
+{
+	setText(0, "ERROR !");
+	setText(1, "");
+}

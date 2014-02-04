@@ -55,30 +55,24 @@ void setup()
 	display.setText(0, "Connecting...");
 }
 
-void displayError()
-{
-	display.setText(0, "* * * ERROR * * *");
-	display.setText(1, "Connection failed");
-	delay(5000);
-}
-
 void loop()
 {
 	if (!sync())
 	{
-		displayError();
+		delay(5000);
+		return;
 	}
-	else
-	{
-		showSelection();
-	}
+
+	showSelection();
 
 	if (buttons.leftPressed())
 	{
+		delay(150);
 		moveSelectedProduct(-1);
 	}
 	else if (buttons.rightPressed())
 	{
+		delay(150);
 		moveSelectedProduct(+1);
 	}
 
@@ -92,13 +86,13 @@ void loop()
 
 	if (badge)
 	{
-		if (!buy(badge, selectedProduct))
-		{
-			displayError();
-		}
-	}
+		buy(badge, selectedProduct);
 
-	delay(100);
+		delay(2000);
+
+		// ignore all waiting badge to avoid unintended double buy
+		while (rfid.tryRead());
+	}	
 }
 
 void moveSelectedProduct(int increment)
@@ -118,18 +112,19 @@ bool buy(char* badge, int product)
 {
 	lastEventTime = millis();
 
+	display.setBusy();
+
 	HttpBuyTransaction buyTransaction(http);
 
 	if (!buyTransaction.perform(badge, product, clock.getTime()))
+	{
+		display.setError();
 		return false;
+	}
 
 	display.setText(0, buyTransaction.getMessage(0));
 	display.setText(1, buyTransaction.getMessage(1));
 	sound.play(buyTransaction.getMelody());
-	delay(3000);
-
-	// ignore all waiting badge to avoid unintended double buy
-	while (rfid.tryRead());
 
 	return true;
 }
@@ -140,10 +135,15 @@ bool sync()
 	if (lastSyncTime != 0 && millis() < lastSyncTime + SYNC_PERIOD)
 		return true;
 
+	display.setBusy();
+
 	HttpSyncTransaction syncTransaction(http);
 
 	if (!syncTransaction.perform())
+	{
+		display.setError();
 		return false;
+	}
 	
 	syncTransaction.getCatalog(catalog);
 	clock.setTime(syncTransaction.getTime());

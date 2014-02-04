@@ -16,6 +16,8 @@ public:
 	void begin();
 	void setText(int, char*);
 	void setSelection(int, char*);
+	void setError();
+	void setBusy();
 };
 
 #endif
