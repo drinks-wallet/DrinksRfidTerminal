@@ -24,7 +24,7 @@
 #include "Sound.h"
 
 #define SYNC_PERIOD	60000L
-#define RESET_PERIOD 10000L
+#define IDLE_PERIOD 10000L
 
 static Buttons buttons;
 static Catalog catalog;
@@ -53,15 +53,16 @@ void setup()
 	rfid.begin();
 
 	display.setText(0, "Connecting...");
+
+	while (!sync())
+	{
+		delay(5000);
+	}
 }
 
 void loop()
 {
-	if (!sync())
-	{
-		delay(5000);
-		return;
-	}
+	unsigned long now = millis();
 
 	showSelection();
 
@@ -76,11 +77,23 @@ void loop()
 		moveSelectedProduct(+1);
 	}
 
-	if (millis() >= lastEventTime + RESET_PERIOD)
+	if (now > lastEventTime + IDLE_PERIOD)
 	{
-		selectedProduct = 0;
-		showSelection();
-	}
+		if (selectedProduct != 0)
+		{
+			selectedProduct = 0;
+			showSelection();
+		}
+
+		if (now > lastSyncTime + SYNC_PERIOD)
+		{
+			if (!sync())
+			{
+				delay(5000);
+			}
+			return;
+		}
+	}	
 
 	char* badge = rfid.tryRead();
 
@@ -131,10 +144,6 @@ bool buy(char* badge, int product)
 
 bool sync()
 {
-	// already sync'ed
-	if (lastSyncTime != 0 && millis() < lastSyncTime + SYNC_PERIOD)
-		return true;
-
 	display.setBusy();
 
 	HttpSyncTransaction syncTransaction(http);
