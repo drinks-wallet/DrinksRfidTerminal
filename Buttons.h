@@ -9,13 +9,29 @@
 #ifndef _BUTTONS_H
 #define _BUTTONS_H
 
+extern bool isLeftButtonPressed, isRightButtonPressed;
+
 class Buttons
 {
-  public:
+public:
   
     void begin();
-    int getSelectedIndex();
-    void setCount(int);   
+
+    bool rightPressed()
+    {
+        if (!isRightButtonPressed) return false;
+        isRightButtonPressed = false;
+        return true;
+    }
+
+    bool leftPressed()
+    {
+        if (!isLeftButtonPressed) return false;
+        isLeftButtonPressed = false;
+        return true;
+    }
+
+private:
 };
 
 #endif

@@ -24,6 +24,7 @@
 #include "Sound.h"
 
 #define SYNC_PERIOD	60000L
+#define RESET_PERIOD 10000L
 
 static Buttons buttons;
 static Catalog catalog;
@@ -33,7 +34,9 @@ static HttpClient http;
 static RfidReader rfid;
 static Sound sound;
 
+int selectedProduct = 0;
 unsigned long lastSyncTime = 0;
+unsigned long lastEventTime = 0;
 
 void setup()
 {
@@ -65,19 +68,31 @@ void loop()
 	{
 		displayError();
 	}
+	else
+	{
+		showSelection();
+	}
 
-	buttons.setCount(catalog.getProductCount());
-	display.setText(0, catalog.getHeader());
+	if (buttons.leftPressed())
+	{
+		moveSelectedProduct(-1);
+	}
+	else if (buttons.rightPressed())
+	{
+		moveSelectedProduct(+1);
+	}
 
-	int product = buttons.getSelectedIndex();
-
-	display.setSelection(1, catalog.getProduct(product));
+	if (millis() >= lastEventTime + RESET_PERIOD)
+	{
+		selectedProduct = 0;
+		showSelection();
+	}
 
 	char* badge = rfid.tryRead();
 
 	if (badge)
 	{
-		if (!buy(badge, product))
+		if (!buy(badge, selectedProduct))
 		{
 			displayError();
 		}
@@ -86,8 +101,23 @@ void loop()
 	delay(100);
 }
 
+void moveSelectedProduct(int increment)
+{
+	lastEventTime = millis();
+	selectedProduct = (selectedProduct + increment + catalog.getProductCount()) % catalog.getProductCount();
+	showSelection();
+}
+
+void showSelection()
+{
+	display.setText(0, catalog.getHeader());
+	display.setSelection(1, catalog.getProduct(selectedProduct));
+}
+
 bool buy(char* badge, int product)
 {
+	lastEventTime = millis();
+
 	HttpBuyTransaction buyTransaction(http);
 
 	if (!buyTransaction.perform(badge, product, clock.getTime()))
@@ -97,6 +127,9 @@ bool buy(char* badge, int product)
 	display.setText(1, buyTransaction.getMessage(1));
 	sound.play(buyTransaction.getMelody());
 	delay(3000);
+
+	// ignore all waiting badge to avoid unintended double buy
+	while (rfid.tryRead());
 
 	return true;
 }
