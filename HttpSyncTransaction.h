@@ -16,32 +16,32 @@ class HttpSyncTransaction
 {
 public:
 
-	HttpSyncTransaction(HttpClient& http)
-		: http(http)
-	{
+    HttpSyncTransaction(HttpClient& http)
+        : http(http)
+    {
 
-	}
+    }
 
-	bool perform()
-	{
-		return send() && parse() && validate();
-	}
+    bool perform()
+    {
+        return send() && parse() && validate();
+    }
 
-	void getCatalog(Catalog&);
-	unsigned long getTime() { return strtoul(time, 0, 10); }
+    void getCatalog(Catalog&);
+    unsigned long getTime() { return strtoul(time, 0, 10); }
 
 private:
 
-	bool send();
-	bool parse();
-	bool validate();
+    bool send();
+    bool parse();
+    bool validate();
 
-	HttpClient& http;
-	char buffer[150];	
-	char* time;
-	char* header;
-	char* products[5];
-	char* hash;
+    HttpClient& http;
+    char buffer[150];    
+    char* time;
+    char* header;
+    char* products[5];
+    char* hash;
 };
 
 #endif

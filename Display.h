@@ -15,16 +15,16 @@ class Display
 {
 public:
 
-	void begin();
-	void setText(int, char*);
-	void setSelection(int, char*);
-	void setError();
-	void setBusy();
-	
-	void setBacklight(byte intensity)
-	{
-		analogWrite(PIN_LCD_LIGHT, intensity);
-	}
+    void begin();
+    void setText(int, char*);
+    void setSelection(int, char*);
+    void setError();
+    void setBusy();
+    
+    void setBacklight(byte intensity)
+    {
+        analogWrite(PIN_LCD_LIGHT, intensity);
+    }
 };
 
 #endif

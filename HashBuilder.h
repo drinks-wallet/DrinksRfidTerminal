@@ -13,12 +13,12 @@ class HashBuilder
 {
 public:
 
-	HashBuilder();
-	void print(char*);
-	char* getHash();
+    HashBuilder();
+    void print(char*);
+    char* getHash();
 
 private:
-	char hash[17];
+    char hash[17];
 };
 
 #endif

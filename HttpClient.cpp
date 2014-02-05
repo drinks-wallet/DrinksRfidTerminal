@@ -21,118 +21,118 @@
 
 void HttpClient::begin()
 {
-	delay(100);
+    delay(100);
 
-	byte mac[6] = MAC_ADDRESS;
+    byte mac[6] = MAC_ADDRESS;
 
-	Serial.println("DHCP...");
+    Serial.println("DHCP...");
 
-	// start the Ethernet connection:
-	while (0 == Ethernet.begin(mac)) 
-	{
-		Serial.println("Failed. Retry...");
-	}
+    // start the Ethernet connection:
+    while (0 == Ethernet.begin(mac)) 
+    {
+        Serial.println("Failed. Retry...");
+    }
 
-	Serial.print("Address=");
-	Serial.println(Ethernet.localIP());
-	
-	Serial.print("Subnet=");
-	Serial.println(Ethernet.subnetMask());
-	
-	Serial.print("DNS=");
-	Serial.println(Ethernet.dnsServerIP());
+    Serial.print("Address=");
+    Serial.println(Ethernet.localIP());
+    
+    Serial.print("Subnet=");
+    Serial.println(Ethernet.subnetMask());
+    
+    Serial.print("DNS=");
+    Serial.println(Ethernet.dnsServerIP());
 
-	Serial.println("Resolve " SERVER_NAME "...");
-	
-	DNSClient dns;
+    Serial.println("Resolve " SERVER_NAME "...");
+    
+    DNSClient dns;
 
-	dns.begin(Ethernet.dnsServerIP());
+    dns.begin(Ethernet.dnsServerIP());
 
-	while (1 != dns.getHostByName(SERVER_NAME, serverIp))
-	{
-		Serial.println("Failed. Retry...");
-	}
+    while (1 != dns.getHostByName(SERVER_NAME, serverIp))
+    {
+        Serial.println("Failed. Retry...");
+    }
 
-	Serial.print("Address=");
-	Serial.println(serverIp);
+    Serial.print("Address=");
+    Serial.println(serverIp);
 
 }
 
 void HttpClient::readln(char* buffer, int size)
 {
-	int i;
+    int i;
 
-	for (i = 0; i < size - 1; i++)
-	{
-		while (!client.available())
-		{
-			if (!client.connected())
-			{
-				buffer[i] = 0;
-				return;
-			}
-		}
+    for (i = 0; i < size - 1; i++)
+    {
+        while (!client.available())
+        {
+            if (!client.connected())
+            {
+                buffer[i] = 0;
+                return;
+            }
+        }
 
-		buffer[i] = client.read();
-		// Serial.print(buffer[i]); 
+        buffer[i] = client.read();
+        // Serial.print(buffer[i]); 
 
-		if (buffer[i] == '\n')
-			break;
-	}
+        if (buffer[i] == '\n')
+            break;
+    }
 
-	buffer[i] = 0;
+    buffer[i] = 0;
 }
 
 bool HttpClient::perform(char* request, char* content, int maxContentSize)
 {
-	/*
-	 * 1. SEND REQUEST
-	 */
+    /*
+     * 1. SEND REQUEST
+     */
 
-	Serial.println(request);	
+    Serial.println(request);    
 
-	if (!client.connect(serverIp, SERVER_PORT))
-	{
-		Serial.println("Connect failed");
-		return false;
-	}
-	
-	client.print(request);
-	client.println(" HTTP/1.1");
-	client.println("Host: " SERVER_NAME ":" xstr(SERVER_PORT));
-	client.println("Accept: application/json");
-	client.println("Connection: close");
+    if (!client.connect(serverIp, SERVER_PORT))
+    {
+        Serial.println("Connect failed");
+        return false;
+    }
+    
+    client.print(request);
+    client.println(" HTTP/1.1");
+    client.println("Host: " SERVER_NAME ":" xstr(SERVER_PORT));
+    client.println("Accept: application/json");
+    client.println("Connection: close");
 
-	if (content[0])
-	{
-		client.println("Content-Type: application/json");
-		client.print("Content-Length: ");
-		client.println(strlen(content));
-		client.println();
+    if (content[0])
+    {
+        client.println("Content-Type: application/json");
+        client.print("Content-Length: ");
+        client.println(strlen(content));
+        client.println();
 
-		Serial.println(content);
-		client.println(content);
-	}
-	else
-	{
-		client.println();
-	}
+        Serial.println(content);
+        client.println(content);
+    }
+    else
+    {
+        client.println();
+    }
 
-	/*
-	 * 2. READ RESPONSE
-	 */		
-	
-	// skip HTTP headers
-	while (readln(content, maxContentSize), NOT_EMPTY(content));
+    /*
+     * 2. READ RESPONSE
+     */        
+    
+    // skip HTTP headers
+    while (readln(content, maxContentSize), NOT_EMPTY(content));
 
-	// read content
-	readln(content, maxContentSize);
-		
-	Serial.println(content);
+    // read content
+    readln(content, maxContentSize);
+        
+    Serial.println(content);
 
-	client.stop();
+    client.stop();
 
-	return content[0] != 0;
+    return content[0] != 0;
 }
 
 

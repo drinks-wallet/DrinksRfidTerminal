@@ -12,8 +12,8 @@
 class Sound
 {
 public:
-	void begin();
-	void play(char*);
+    void begin();
+    void play(char*);
 };
 
 #endif

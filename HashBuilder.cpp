@@ -14,26 +14,26 @@
 
 HashBuilder::HashBuilder()
 {
-	unsigned char key[16] = PRIVATE_KEY;
-	sipHash.initFromRAM(key);
+    unsigned char key[16] = PRIVATE_KEY;
+    sipHash.initFromRAM(key);
 }
 
 char* HashBuilder::getHash()
 {
-	sipHash.finish();
+    sipHash.finish();
 
-	for (int i = 0; i < 8; i++)
-		snprintf(hash + 2 * i, 3, "%02X", sipHash.result[i]);
+    for (int i = 0; i < 8; i++)
+        snprintf(hash + 2 * i, 3, "%02X", sipHash.result[i]);
 
-	hash[16] = 0;
-	return hash;
+    hash[16] = 0;
+    return hash;
 }
 
 void HashBuilder::print(char* source)
 {
-	while (*source)
-	{
-		sipHash.updateHash((byte) *source);
-		source++;
-	}
+    while (*source)
+    {
+        sipHash.updateHash((byte) *source);
+        source++;
+    }
 }

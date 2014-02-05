@@ -15,54 +15,54 @@
 
 bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 {
-	char productString[2];
-	char timeString[11];
-	
-	snprintf(productString, sizeof(productString), "%d", product);
-	snprintf(timeString, sizeof(timeString), "%lu", time);
+    char productString[2];
+    char timeString[11];
+    
+    snprintf(productString, sizeof(productString), "%d", product);
+    snprintf(timeString, sizeof(timeString), "%lu", time);
 
-	HashBuilder hashBuilder;
-	hashBuilder.print(badge);
-	hashBuilder.print(productString);
-	hashBuilder.print(timeString);
+    HashBuilder hashBuilder;
+    hashBuilder.print(badge);
+    hashBuilder.print(productString);
+    hashBuilder.print(timeString);
 
-	snprintf(buffer, sizeof(buffer), "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hashBuilder.getHash(), productString, timeString);
+    snprintf(buffer, sizeof(buffer), "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hashBuilder.getHash(), productString, timeString);
 
-	return http.perform("POST " API_PATH "/buy", buffer, sizeof(buffer));
+    return http.perform("POST " API_PATH "/buy", buffer, sizeof(buffer));
 }
 
 bool HttpBuyTransaction::parse()
 {
-	JsonParser<13> parser;
+    JsonParser<13> parser;
 
-	JsonHashTable root = parser.parseHashTable(buffer);
-	if (!root.success()) return false;
+    JsonHashTable root = parser.parseHashTable(buffer);
+    if (!root.success()) return false;
 
-	melody = root.getString("Melody");
-	if (melody == NULL) return false;
+    melody = root.getString("Melody");
+    if (melody == NULL) return false;
 
-	JsonArray messageArray = root.getArray("Message");
-	if (!messageArray.success()) return false;
-	
-	messages[0] = messageArray.getString(0);
-	messages[1] = messageArray.getString(1);
+    JsonArray messageArray = root.getArray("Message");
+    if (!messageArray.success()) return false;
+    
+    messages[0] = messageArray.getString(0);
+    messages[1] = messageArray.getString(1);
 
-	time = root.getString("Time");
-	if (time == NULL) return false;
+    time = root.getString("Time");
+    if (time == NULL) return false;
 
-	hash = root.getString("Hash");
-	if (hash == NULL) return false;
+    hash = root.getString("Hash");
+    if (hash == NULL) return false;
 
-	return true;
+    return true;
 }
 
 bool HttpBuyTransaction::validate()
 {
-	HashBuilder hashBuilder;
-	hashBuilder.print(melody);
-	hashBuilder.print(messages[0]);
-	hashBuilder.print(messages[1]);
-	hashBuilder.print(time);
+    HashBuilder hashBuilder;
+    hashBuilder.print(melody);
+    hashBuilder.print(messages[0]);
+    hashBuilder.print(messages[1]);
+    hashBuilder.print(time);
 
-	return strcasecmp(hash, hashBuilder.getHash()) == 0;
+    return strcasecmp(hash, hashBuilder.getHash()) == 0;
 }

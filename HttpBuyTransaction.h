@@ -15,31 +15,31 @@ class HttpBuyTransaction
 {
 public:
 
-	HttpBuyTransaction(HttpClient& http)
-		:http(http)
-	{
-	}
+    HttpBuyTransaction(HttpClient& http)
+        :http(http)
+    {
+    }
 
-	bool perform(char* badge, int product, unsigned long time)
-	{
-		return send(badge, product, time) && parse() && validate();
-	}
+    bool perform(char* badge, int product, unsigned long time)
+    {
+        return send(badge, product, time) && parse() && validate();
+    }
 
-	char* getMelody() { return melody; }
-	char* getMessage(int i) { return messages[i]; }
+    char* getMelody() { return melody; }
+    char* getMessage(int i) { return messages[i]; }
 
 private:
 
-	bool send(char*, int, unsigned long);
-	bool parse();
-	bool validate();
+    bool send(char*, int, unsigned long);
+    bool parse();
+    bool validate();
 
-	HttpClient& http;
-	char buffer[150];
-	char* hash;
-	char* messages[2];
-	char* melody;
-	char* time;
+    HttpClient& http;
+    char buffer[150];
+    char* hash;
+    char* messages[2];
+    char* melody;
+    char* time;
 };
 
 #endif

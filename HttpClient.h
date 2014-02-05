@@ -14,16 +14,16 @@
 class HttpClient
 {
 public:
-	void begin();
+    void begin();
 
-	bool perform(char* path, char* content, int maxContentSize);
+    bool perform(char* path, char* content, int maxContentSize);
 
 private:
 
-	void readln(char*, int);
+    void readln(char*, int);
 
-	IPAddress serverIp;
-	EthernetClient client;
+    IPAddress serverIp;
+    EthernetClient client;
 };
 
 #endif

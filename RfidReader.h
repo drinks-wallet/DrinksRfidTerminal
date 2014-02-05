@@ -17,25 +17,25 @@ class RfidReader
 {
 public:
 
-	RfidReader() : rfid(PIN_RFID, PIN_RFID)
-	{
-	}
+    RfidReader() : rfid(PIN_RFID, PIN_RFID)
+    {
+    }
 
-	void begin()
-	{
-		rfid.begin(9600);
-	}
+    void begin()
+    {
+        rfid.begin(9600);
+    }
 
-	char* tryRead();
+    char* tryRead();
 
 private:
 
-	byte parseHexNibble(char);
-	byte parseHexByte(char*);
-	byte computeCheckSum(char*);
+    byte parseHexNibble(char);
+    byte parseHexByte(char*);
+    byte computeCheckSum(char*);
 
-	SoftwareSerial rfid;
-	char buffer[14];
+    SoftwareSerial rfid;
+    char buffer[14];
 };
 
 #endif

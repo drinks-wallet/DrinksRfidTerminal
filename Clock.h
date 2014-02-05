@@ -13,12 +13,12 @@ class Clock
 {
 public:
 
-	void setTime(unsigned long time);
-	unsigned long getTime();
+    void setTime(unsigned long time);
+    unsigned long getTime();
 
 private:
 
-	unsigned long zero;
+    unsigned long zero;
 };
 
 #endif

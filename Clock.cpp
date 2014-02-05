@@ -12,10 +12,10 @@
 
 void Clock::setTime(unsigned long time)
 {
-	zero = time - millis();
+    zero = time - millis();
 }
 
 unsigned long Clock::getTime()
 {
-	return zero + millis();
+    return zero + millis();
 }
