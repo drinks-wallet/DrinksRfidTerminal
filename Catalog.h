@@ -15,16 +15,40 @@ class Catalog
 {
 public:
 
-    Catalog();
+    Catalog()
+    {
+        productCount = 0;
+    }
 
-    void setProductCount(int);
-    int getProductCount();
+    void setProductCount(int count)
+    {
+        productCount = count;
+    }
 
-    char* getProduct(int);
-    void setProduct(int, char*);
+    int getProductCount()
+    {
+        return productCount;
+    }
 
-    char* getHeader();
-    void setHeader(char*);
+    char* getProduct(int id)
+    {
+        return products[id];
+    }
+
+    void setProduct(int id, char* s)
+    {
+        strncpy(products[id], s, PRODUCT_NAME_SIZE);
+    }
+
+    char* getHeader()
+    {
+        return header;
+    }
+
+    void setHeader(char* s)
+    {
+        strncpy(header, s, CATALOG_HEADER_SIZE);
+    }
 
     static const int MAX_PRODUCT_COUNT = 4;
     static const int PRODUCT_NAME_SIZE = 19;
@@ -32,7 +56,7 @@ public:
 
 private:
 
-    int count;
+    int productCount;
     char products[MAX_PRODUCT_COUNT][PRODUCT_NAME_SIZE];
     char header[CATALOG_HEADER_SIZE];
 };
