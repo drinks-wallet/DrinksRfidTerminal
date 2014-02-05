@@ -12,16 +12,29 @@
 #include "Buttons.h"
 #include "Pins.h"
 
-bool isLeftButtonPressed, isRightButtonPressed;
+#define DEBOUNCE_PERIOD		200
+
+bool isLeftButtonPressed = false, isRightButtonPressed = false;
+static unsigned long blindUntil = 0;
+
+static bool checkBounce()
+{
+	unsigned long now = millis();
+	if (now < blindUntil) return false;
+	blindUntil = now + DEBOUNCE_PERIOD;
+	return true;
+}
 
 static void onLeftPressed()
 {
-	isLeftButtonPressed = true;
+	if (checkBounce())
+		isLeftButtonPressed = true;
 }
 
 static void onRightPressed()
 {
-	isRightButtonPressed = true;
+	if (checkBounce())
+		isRightButtonPressed = true;
 }
 
 void Buttons::begin()
