@@ -22,4 +22,6 @@
 
 #define SERVER_PORT 80
 
+#define API_PATH	"/drinks/api"
+
 #endif

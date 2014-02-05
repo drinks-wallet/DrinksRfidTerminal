@@ -9,6 +9,7 @@
 #include <Arduino.h>
 #include <JsonParser.h>
 
+#include "Configuration.h"
 #include "HashBuilder.h"
 #include "HttpSyncTransaction.h"
 
@@ -16,7 +17,7 @@ bool HttpSyncTransaction::send()
 {
 	buffer[0] = 0;
 
-	return http.perform("GET /drinks/api/sync", buffer, sizeof(buffer));
+	return http.perform("GET " API_PATH "/sync", buffer, sizeof(buffer));
 }
 
 bool HttpSyncTransaction::parse()

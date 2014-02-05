@@ -9,6 +9,7 @@
 #include <Arduino.h>
 #include <JsonParser.h>
 
+#include "Configuration.h"
 #include "HashBuilder.h"
 #include "HttpBuyTransaction.h"
 
@@ -27,7 +28,7 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 
 	snprintf(buffer, sizeof(buffer), "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hashBuilder.getHash(), productString, timeString);
 
-	return http.perform("POST /drinks/api/buy", buffer, sizeof(buffer));
+	return http.perform("POST " API_PATH "/buy", buffer, sizeof(buffer));
 }
 
 bool HttpBuyTransaction::parse()
