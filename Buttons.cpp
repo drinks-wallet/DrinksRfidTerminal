@@ -12,12 +12,10 @@
 #include "Buttons.h"
 #include "Pins.h"
 
-#define DEBOUNCE_PERIOD		200
+byte Buttons::pressedButton = Buttons::NONE;
+unsigned long Buttons::blindUntil = 0;
 
-bool isLeftButtonPressed = false, isRightButtonPressed = false;
-static unsigned long blindUntil = 0;
-
-static bool checkBounce()
+bool Buttons::checkBounce()
 {
 	unsigned long now = millis();
 	if (now < blindUntil) return false;
@@ -25,16 +23,16 @@ static bool checkBounce()
 	return true;
 }
 
-static void onLeftPressed()
+void Buttons::onLeftPressed()
 {
 	if (checkBounce())
-		isLeftButtonPressed = true;
+		pressedButton = LEFT;
 }
 
-static void onRightPressed()
+void Buttons::onRightPressed()
 {
 	if (checkBounce())
-		isRightButtonPressed = true;
+		pressedButton = RIGHT;
 }
 
 void Buttons::begin()
