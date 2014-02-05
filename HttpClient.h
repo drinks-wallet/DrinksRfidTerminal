@@ -16,7 +16,7 @@ class HttpClient
 public:
     void begin();
 
-    bool perform(char* path, char* content, int maxContentSize);
+    bool perform(const char* path, char* content, int maxContentSize);
 
 private:
 

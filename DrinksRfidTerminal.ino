@@ -43,17 +43,13 @@ void setup()
     Serial.begin(9600);
 
     display.begin();
-
-    display.setText(0, "Initializing...");
-    display.setText(1, "");
     display.setBacklight(255);
+    display.setBusy();
 
     sound.begin();
     http.begin();
     buttons.begin();
     rfid.begin();
-
-    display.setText(0, "Connecting...");
 
     while (!sync())
     {

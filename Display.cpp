@@ -24,7 +24,7 @@ void Display::begin()
     delay(100);
 }
 
-void Display::setText(int line, char* s)
+void Display::setText(int line, const char* s)
 {
     lcd.setCursor(0, line);
 
@@ -35,7 +35,7 @@ void Display::setText(int line, char* s)
         lcd.print(' ');
 }
 
-void Display::setSelection(int line, char* s)
+void Display::setSelection(int line, const char* s)
 {
     int length = strnlen(s, SELECTION_MAX_LENGTH);
     int leftPadding = (SELECTION_MAX_LENGTH - length) / 2;
