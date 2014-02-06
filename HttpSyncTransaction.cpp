@@ -22,7 +22,7 @@ bool HttpSyncTransaction::send()
 
 bool HttpSyncTransaction::parse()
 {
-    JsonParser<13> parser;
+    JsonParser<9 + Catalog::MAX_PRODUCT_COUNT> parser;
 
     JsonHashTable root = parser.parseHashTable(buffer);
     if (!root.success()) return false;
