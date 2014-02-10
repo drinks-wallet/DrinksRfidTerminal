@@ -23,8 +23,8 @@
 #include "RfidReader.h"
 #include "Sound.h"
 
-#define SYNC_PERIOD    600000UL	// 10 minutes
-#define IDLE_PERIOD		10000UL	// 10 seconds
+#define SYNC_PERIOD    600000UL // 10 minutes
+#define IDLE_PERIOD    10000UL  // 10 seconds
 
 static Buttons buttons;
 static Catalog catalog;

@@ -37,7 +37,7 @@ private:
     static void onLeftPressed();
     static void onRightPressed();
 
-    static const unsigned long DEBOUNCE_PERIOD = 100;
+    static const unsigned long DEBOUNCE_PERIOD = 200;
     static const byte NONE = 0;
     static const byte LEFT = 1;
     static const byte RIGHT = 2;

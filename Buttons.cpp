@@ -18,9 +18,9 @@ unsigned long Buttons::blindUntil = 0;
 bool Buttons::checkBounce()
 {
     unsigned long now = millis();
-    if (now < blindUntil) return false;
+    bool ok = now > blindUntil;
     blindUntil = now + DEBOUNCE_PERIOD;
-    return true;
+    return ok;
 }
 
 void Buttons::onLeftPressed()
