@@ -83,7 +83,7 @@ void HttpClient::readln(char* buffer, int size)
     buffer[i] = 0;
 }
 
-bool HttpClient::perform(const char* request, char* content, int maxContentSize)
+bool HttpClient::query(const char* request, char* content, int maxContentSize)
 {
     /*
      * 1. SEND REQUEST

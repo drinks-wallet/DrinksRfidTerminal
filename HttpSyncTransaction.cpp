@@ -17,7 +17,7 @@ bool HttpSyncTransaction::send()
 {
     buffer[0] = 0;
 
-    return http.perform("GET " API_PATH "/sync", buffer, sizeof(buffer));
+    return http.query("GET " API_PATH "/sync", buffer, sizeof(buffer));
 }
 
 bool HttpSyncTransaction::parse()

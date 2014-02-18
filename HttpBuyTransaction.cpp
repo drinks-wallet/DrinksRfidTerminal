@@ -28,7 +28,7 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 
     snprintf(buffer, sizeof(buffer), "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hashBuilder.getHash(), productString, timeString);
 
-    return http.perform("POST " API_PATH "/buy", buffer, sizeof(buffer));
+    return http.query("POST " API_PATH "/buy", buffer, sizeof(buffer));
 }
 
 bool HttpBuyTransaction::parse()
