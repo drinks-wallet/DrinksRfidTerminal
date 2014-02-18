@@ -9,8 +9,6 @@
 #ifndef _CATALOG_H
 #define _CATALOG_H
 
-#include "Configuration.h"
-
 class Catalog
 {
 public:

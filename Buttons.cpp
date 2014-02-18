@@ -8,7 +8,6 @@
 
 #include <Arduino.h>
 
-#include "Configuration.h"
 #include "Buttons.h"
 #include "Pins.h"
 
