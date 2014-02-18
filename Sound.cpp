@@ -11,14 +11,6 @@
 #include "Pins.h"
 #include "Sound.h"
 
-#define NOTE_A_FREQUENCY    4186
-#define NOTE_B_FREQUENCY    4699
-#define NOTE_C_FREQUENCY    4699
-#define NOTE_D_FREQUENCY    5274
-#define NOTE_E_FREQUENCY    6271
-#define NOTE_F_FREQUENCY    7040
-#define NOTE_G_FREQUENCY    7902
-
 void Sound::begin()
 {
     pinMode(PIN_BUZZER, OUTPUT);
