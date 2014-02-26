@@ -37,7 +37,7 @@ private:
     bool validate();
 
     HttpClient& http;
-    char buffer[150];    
+    char buffer[200];    
     char* time;
     char* header;
     char* products[5];
