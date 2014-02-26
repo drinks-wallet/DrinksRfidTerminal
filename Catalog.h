@@ -48,7 +48,7 @@ public:
         strncpy(header, s, CATALOG_HEADER_SIZE);
     }
 
-    static const int MAX_PRODUCT_COUNT = 4;
+    static const int MAX_PRODUCT_COUNT = 5;
     static const int PRODUCT_NAME_SIZE = 19;
     static const int CATALOG_HEADER_SIZE = 21;
 

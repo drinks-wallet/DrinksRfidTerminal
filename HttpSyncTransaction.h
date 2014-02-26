@@ -40,7 +40,7 @@ private:
     char buffer[200];    
     char* time;
     char* header;
-    char* products[5];
+    char* products[Catalog::MAX_PRODUCT_COUNT + 1];
     char* hash;
 };
 
