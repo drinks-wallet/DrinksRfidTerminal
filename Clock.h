@@ -13,8 +13,8 @@ class Clock
 {
 public:
 
-    void setTime(unsigned long time);
-    unsigned long getTime();
+    void setUnixTime(unsigned long time);
+    unsigned long getUnixTime();
 
 private:
 

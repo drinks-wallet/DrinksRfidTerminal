@@ -138,7 +138,7 @@ bool buy(char* badge, int product)
 
     HttpBuyTransaction buyTransaction(http);
 
-    if (!buyTransaction.perform(badge, product, clock.getTime()))
+    if (!buyTransaction.perform(badge, product, clock.getUnixTime()))
     {
         display.setError();
         return false;
@@ -164,7 +164,7 @@ bool sync()
     }
     
     syncTransaction.getCatalog(catalog);
-    clock.setTime(syncTransaction.getTime());
+    clock.setUnixTime(syncTransaction.getTime());
 
     lastSyncTime = millis();
 
