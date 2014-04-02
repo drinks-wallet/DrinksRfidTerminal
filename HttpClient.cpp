@@ -60,24 +60,27 @@ void HttpClient::begin()
 
 void HttpClient::readln(char* buffer, int size)
 {
-    int i;
+    int i = 0;
+    bool connected = true;
 
-    for (i = 0; i < size - 1; i++)
+    while (i < size - 1)
     {
-        while (!client.available())
+        if (client.available()>0)
         {
-            if (!client.connected())
-            {
-                buffer[i] = 0;
-                return;
-            }
+          char c = client.read();
+          //Serial.print(c);  
+          
+          if (c == '\n') break;
+              
+          buffer[i++] = c;          
         }
-
-        buffer[i] = client.read();
-        // Serial.print(buffer[i]); 
-
-        if (buffer[i] == '\n')
-            break;
+        else if (!connected)
+        {
+            Serial.println("interrupted");
+            break;    
+        }
+        
+        connected = client.connected();
     }
 
     buffer[i] = 0;
