@@ -24,7 +24,7 @@
 #include "Sound.h"
 
 #define SYNC_PERIOD    600000UL // 10 minutes
-#define IDLE_PERIOD    10000UL  // 10 seconds
+#define IDLE_PERIOD    15000UL  // 15 seconds
 
 static Buttons buttons;
 static Catalog catalog;
@@ -113,6 +113,8 @@ void loop()
 
         // ignore all waiting badge to avoid unintended double buy
         while (rfid.tryRead());
+
+        lastEventTime = millis();
     }    
 }
 
@@ -131,8 +133,6 @@ void showSelection()
 
 bool buy(char* badge, int product)
 {
-    lastEventTime = millis();
-
     display.setBacklight(255);
     display.setBusy();
 
