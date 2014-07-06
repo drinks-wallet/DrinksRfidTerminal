@@ -8,6 +8,7 @@
 
 #include <Arduino.h>
 #include <JsonParser.h>
+#include <JsonGenerator.h>
 
 #include "Configuration.h"
 #include "HashBuilder.h"
@@ -25,8 +26,15 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
     hashBuilder.print(badge);
     hashBuilder.print(productString);
     hashBuilder.print(timeString);
-
-    snprintf(buffer, sizeof(buffer), "{Badge:\"%s\",Hash:\"%s\",Product:%s,Time:%s}", badge, hashBuilder.getHash(), productString, timeString);
+    
+    using namespace ArduinoJson::Generator;
+    
+    JsonHashTable<4> json;
+    json.add("Badge", badge);
+    json.add("Hash", hashBuilder.getHash());
+    json.add("Product", productString);
+    json.add("Time", timeString);
+    json.printTo(buffer, sizeof(buffer));
 
     return http.query("POST " API_PATH "/buy", buffer, sizeof(buffer));
 }
