@@ -22,6 +22,8 @@ bool HttpSyncTransaction::send()
 
 bool HttpSyncTransaction::parse()
 {
+    using namespace ArduinoJson::Parser;
+  
     JsonParser<9 + Catalog::MAX_PRODUCT_COUNT> parser;
 
     JsonHashTable root = parser.parseHashTable(buffer);

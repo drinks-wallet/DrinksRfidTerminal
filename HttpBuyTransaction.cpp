@@ -33,6 +33,8 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 
 bool HttpBuyTransaction::parse()
 {
+    using namespace ArduinoJson::Parser;
+  
     JsonParser<13> parser;
 
     JsonHashTable root = parser.parseHashTable(buffer);
