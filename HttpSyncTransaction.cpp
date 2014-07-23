@@ -26,26 +26,26 @@ bool HttpSyncTransaction::parse()
   
     JsonParser<9 + Catalog::MAX_PRODUCT_COUNT> parser;
 
-    JsonHashTable root = parser.parseHashTable(buffer);
+    JsonObject root = parser.parse(buffer);
     if (!root.success()) return false;
 
-    header = root.getString("Header");
+    header = root["Header"];
     if (header == NULL) return false;
 
-    JsonArray productsArray = root.getArray("Products");
+    JsonArray productsArray = root["Products"];
     if (!productsArray.success()) return false;
 
-    int count = productsArray.getLength();
+    int count = productsArray.size();
     for (int i = 0; i < count; i++)
     {
-        products[i] = productsArray.getString(i);
+        products[i] = productsArray[i];
     }
     products[count] = NULL;
 
-    time = root.getString("Time");
+    time = root["Time"];
     if (time == NULL) return false;
 
-    hash = root.getString("Hash");
+    hash = root["Hash"];
     if (hash == NULL) return false;
 
     return true;

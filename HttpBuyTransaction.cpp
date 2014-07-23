@@ -29,7 +29,7 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
     
     using namespace ArduinoJson::Generator;
     
-    JsonHashTable<4> json;
+    JsonObject<4> json;
     json.add("Badge", badge);
     json.add("Hash", hashBuilder.getHash());
     json.add("Product", productString);
@@ -45,22 +45,22 @@ bool HttpBuyTransaction::parse()
   
     JsonParser<13> parser;
 
-    JsonHashTable root = parser.parseHashTable(buffer);
+    JsonObject root = parser.parse(buffer);
     if (!root.success()) return false;
 
-    melody = root.getString("Melody");
+    melody = root["Melody"];
     if (melody == NULL) return false;
 
-    JsonArray messageArray = root.getArray("Message");
+    JsonArray messageArray = root["Message"];
     if (!messageArray.success()) return false;
     
-    messages[0] = messageArray.getString(0);
-    messages[1] = messageArray.getString(1);
+    messages[0] = messageArray[0];
+    messages[1] = messageArray[1];
 
-    time = root.getString("Time");
+    time = root["Time"];
     if (time == NULL) return false;
 
-    hash = root.getString("Hash");
+    hash = root["Hash"];
     if (hash == NULL) return false;
 
     return true;
