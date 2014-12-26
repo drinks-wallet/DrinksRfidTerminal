@@ -7,8 +7,7 @@
 */
 
 #include <Arduino.h>
-#include <JsonParser.h>
-#include <JsonGenerator.h>
+#include <ArduinoJson.h>
 
 #include "Configuration.h"
 #include "HashBuilder.h"
@@ -27,13 +26,12 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
     hashBuilder.print(productString);
     hashBuilder.print(timeString);
     
-    using namespace ArduinoJson::Generator;
-    
-    JsonObject<4> json;
-    json.add("Badge", badge);
-    json.add("Hash", hashBuilder.getHash());
-    json.add("Product", productString);
-    json.add("Time", timeString);
+    StaticJsonBuffer<JSON_OBJECT_SIZE(4)> jsonBuffer;
+    JsonObject& json = jsonBuffer.createObject();
+    json["Badge"] = badge;
+    json["Hash"] = hashBuilder.getHash();
+    json["Product"] = productString;
+    json["Time"] = timeString;
     json.printTo(buffer, sizeof(buffer));
 
     return http.query("POST " API_PATH "/buy", buffer, sizeof(buffer));
@@ -41,17 +39,15 @@ bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
 
 bool HttpBuyTransaction::parse()
 {
-    using namespace ArduinoJson::Parser;
-  
-    JsonParser<13> parser;
+    StaticJsonBuffer<JSON_OBJECT_SIZE(4)+JSON_ARRAY_SIZE(2)> jsonBuffer;
 
-    JsonObject root = parser.parse(buffer);
+    JsonObject& root = jsonBuffer.parseObject(buffer);
     if (!root.success()) return false;
 
     melody = root["Melody"];
     if (melody == NULL) return false;
 
-    JsonArray messageArray = root["Message"];
+    JsonArray& messageArray = root["Message"];
     if (!messageArray.success()) return false;
     
     messages[0] = messageArray[0];

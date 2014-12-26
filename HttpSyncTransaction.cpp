@@ -7,7 +7,7 @@
 */
 
 #include <Arduino.h>
-#include <JsonParser.h>
+#include <ArduinoJson.h>
 
 #include "Configuration.h"
 #include "HashBuilder.h"
@@ -22,17 +22,15 @@ bool HttpSyncTransaction::send()
 
 bool HttpSyncTransaction::parse()
 {
-    using namespace ArduinoJson::Parser;
-  
-    JsonParser<9 + Catalog::MAX_PRODUCT_COUNT> parser;
+    StaticJsonBuffer<JSON_OBJECT_SIZE(4)+JSON_ARRAY_SIZE(Catalog::MAX_PRODUCT_COUNT)> jsonBuffer;
 
-    JsonObject root = parser.parse(buffer);
+    JsonObject& root = jsonBuffer.parseObject(buffer);
     if (!root.success()) return false;
 
     header = root["Header"];
     if (header == NULL) return false;
 
-    JsonArray productsArray = root["Products"];
+    JsonArray& productsArray = root["Products"];
     if (!productsArray.success()) return false;
 
     int count = productsArray.size();

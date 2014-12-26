@@ -25,8 +25,8 @@ public:
         return send(badge, product, time) && parse() && validate();
     }
 
-    char* getMelody() { return melody; }
-    char* getMessage(int i) { return messages[i]; }
+    const char* getMelody() { return melody; }
+    const char* getMessage(int i) { return messages[i]; }
 
 private:
 
@@ -36,10 +36,10 @@ private:
 
     HttpClient& http;
     char buffer[150];
-    char* hash;
-    char* messages[2];
-    char* melody;
-    char* time;
+    const char* hash;
+    const char* messages[2];
+    const char* melody;
+    const char* time;
 };
 
 #endif

@@ -8,7 +8,7 @@
 
 #include <Ethernet.h>
 #include <SPI.h>
-#include <JsonParser.h>
+#include <ArduinoJson.h>
 #include <LiquidCrystal.h>
 #include <SipHash_2_4.h>
 #include <SoftwareSerial.h>

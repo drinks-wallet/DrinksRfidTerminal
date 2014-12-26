@@ -18,7 +18,7 @@ HashBuilder::HashBuilder()
     sipHash.initFromRAM(key);
 }
 
-char* HashBuilder::getHash()
+const char* HashBuilder::getHash()
 {
     sipHash.finish();
 
@@ -29,7 +29,7 @@ char* HashBuilder::getHash()
     return hash;
 }
 
-void HashBuilder::print(char* source)
+void HashBuilder::print(const char* source)
 {
     while (*source)
     {

@@ -14,8 +14,8 @@ class HashBuilder
 public:
 
     HashBuilder();
-    void print(char*);
-    char* getHash();
+    void print(const char*);
+    const char* getHash();
 
 private:
     char hash[17];

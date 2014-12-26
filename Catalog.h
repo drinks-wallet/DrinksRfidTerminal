@@ -33,7 +33,7 @@ public:
         return products[id];
     }
 
-    void setProduct(int id, char* s)
+    void setProduct(int id, const char* s)
     {
         strncpy(products[id], s, PRODUCT_NAME_SIZE);
     }
@@ -43,7 +43,7 @@ public:
         return header;
     }
 
-    void setHeader(char* s)
+    void setHeader(const char* s)
     {
         strncpy(header, s, CATALOG_HEADER_SIZE);
     }

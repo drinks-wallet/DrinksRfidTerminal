@@ -38,10 +38,10 @@ private:
 
     HttpClient& http;
     char buffer[200];    
-    char* time;
-    char* header;
-    char* products[Catalog::MAX_PRODUCT_COUNT + 1];
-    char* hash;
+    const char* time;
+    const char* header;
+    const char* products[Catalog::MAX_PRODUCT_COUNT + 1];
+    const char* hash;
 };
 
 #endif
