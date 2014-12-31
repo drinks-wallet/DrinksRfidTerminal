@@ -16,7 +16,7 @@ void Sound::begin()
     pinMode(PIN_BUZZER, OUTPUT);
 }
 
-void Sound::play(char* melody)
+void Sound::play(const char* melody)
 {
     int frequencies [] = { 4186, 4699, 4699, 5274, 6271, 7040, 7902 };
 

@@ -13,7 +13,7 @@ class Sound
 {
 public:
     void begin();
-    void play(char*);
+    void play(const char*);
 };
 
 #endif
