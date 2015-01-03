@@ -28,7 +28,12 @@ public:
     }
 
     void getCatalog(Catalog&);
-    unsigned long getTime() { return strtoul(time, 0, 10); }
+    
+    unsigned long getTime() 
+    { 
+        // use strtol instead of strtoul to reduce code space
+        return strtol(time, 0, 10); 
+    }
 
 private:
 
