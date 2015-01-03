@@ -13,25 +13,19 @@
 #include "HashBuilder.h"
 #include "HttpBuyTransaction.h"
 
-bool HttpBuyTransaction::send(char* badge, int product, unsigned long time)
+bool HttpBuyTransaction::send(char* badge, int product, long time)
 {
-    char productString[2];
-    char timeString[11];
-    
-    snprintf(productString, sizeof(productString), "%d", product);
-    snprintf(timeString, sizeof(timeString), "%lu", time);
-
     HashBuilder hashBuilder;
     hashBuilder.print(badge);
-    hashBuilder.print(productString);
-    hashBuilder.print(timeString);
+    hashBuilder.print(product);
+    hashBuilder.print(time);
     
     StaticJsonBuffer<JSON_OBJECT_SIZE(4)> jsonBuffer;
     JsonObject& json = jsonBuffer.createObject();
     json["Badge"] = badge;
     json["Hash"] = hashBuilder.getHash();
-    json["Product"] = productString;
-    json["Time"] = timeString;
+    json["Product"] = product;
+    json["Time"] = time;
     json.printTo(buffer, sizeof(buffer));
 
     return http.query("POST " API_PATH "/buy", buffer, sizeof(buffer));

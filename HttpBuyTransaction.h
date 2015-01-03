@@ -20,7 +20,7 @@ public:
     {
     }
 
-    bool perform(char* badge, int product, unsigned long time)
+    bool perform(char* badge, int product, long time)
     {
         return send(badge, product, time) && parse() && validate();
     }
@@ -30,7 +30,7 @@ public:
 
 private:
 
-    bool send(char*, int, unsigned long);
+    bool send(char*, int, long);
     bool parse();
     bool validate();
 

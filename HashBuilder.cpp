@@ -29,11 +29,8 @@ const char* HashBuilder::getHash()
     return hash;
 }
 
-void HashBuilder::print(const char* source)
+size_t HashBuilder::write(uint8_t c)
 {
-    while (*source)
-    {
-        sipHash.updateHash((byte) *source);
-        source++;
-    }
+    sipHash.updateHash(c);
+    return 1;
 }

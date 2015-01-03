@@ -9,13 +9,14 @@
 #ifndef _HASHBUILDER_H
 #define _HASHBUILDER_H
 
-class HashBuilder
+class HashBuilder : public Print
 {
 public:
 
     HashBuilder();
-    void print(const char*);
     const char* getHash();
+
+    virtual size_t write(uint8_t c);
 
 private:
     char hash[17];
